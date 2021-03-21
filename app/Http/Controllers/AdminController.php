@@ -87,4 +87,80 @@ class AdminController extends Controller
     {
         return;
     }
+
+    /**
+    * getCurretUsers
+    * shot description 
+    * Success Cases :
+    * 1)
+    * 
+    * Failure Cases:
+    * 1)
+    * 
+    * 
+    * @bodyParam 
+    * @bodyParam 
+    * 
+    * @response 200{
+    * "": ""
+    * }
+    * @response  400{
+    * "error": "error_message"
+    * }
+    * @response  404{
+    * "error": "not_found_error_message"
+    * }
+    */
+    /**
+    * retreive current users in the website.
+    *
+    * function description here.
+    *
+    * @param Request $request  
+    *
+    * @return json
+    */
+
+    public function getCurretUsers(Request $request)
+    {
+        return;
+    }
+
+        /**
+    * getBinnedUsers
+    * shot description 
+    * Success Cases :
+    * 1)
+    * 
+    * Failure Cases:
+    * 1)
+    * 
+    * 
+    * @bodyParam 
+    * @bodyParam 
+    * 
+    * @response 200{
+    * "": ""
+    * }
+    * @response  400{
+    * "error": "error_message"
+    * }
+    * @response  404{
+    * "error": "not_found_error_message"
+    * }
+    */
+    /**
+    * retreive the binned users ( signed up and waiting for confirmation ) in the website.
+    *
+    * function description here.
+    *
+    * @param Request $request  
+    *
+    * @return json
+    */
+
+    public function getBinnedUsers(Request $request)
+    {
+        return;
+    }
 }

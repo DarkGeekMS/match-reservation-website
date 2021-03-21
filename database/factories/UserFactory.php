@@ -5,6 +5,9 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+
+use Faker\Generator as Faker;
 
 class UserFactory extends Factory
 {
@@ -22,12 +25,19 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        static $i = 5;
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'id'         => $i++,
+            'username'   => $this->faker->unique()->userName,
+            'password'   => '$2y$10$EFyhgTaTJGLEtHg3ylrJ/eAIoEFZ/UZ4w3/dMF5CF4NteCsB/PcgS',
+            'email'      => $this->faker->safeEmail,
+            'first_name' => $this->faker->firstName,
+            'last_name'  => $this->faker->lastName,
+            'gender'     => rand(0, 1),
+            'city'       => 'cairo',
+            'birthdate'  => $this->faker->date,
+            'role'       => rand(1, 2),
+
         ];
     }
 }

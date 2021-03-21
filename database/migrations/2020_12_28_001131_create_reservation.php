@@ -14,14 +14,14 @@ class CreateReservation extends Migration
     public function up()
     {
         Schema::create('reservation', function (Blueprint $table) {
-            $table->integer('ticket_number');
+            $table->integer('ticket_number')->unique();              // must be unique to every reservation
             $table->integer('match_id')->unsigned();
-            $table->integer('fan_id')->unsigned();
+            $table->integer('fan_id')->unsigned()->nullable();
             $table->integer('seat_number');
             $table->integer('row_number');
-            $table->primary('ticket_number');
-            $table->foreign('match_id')->references('id')->on('matches')->onDelete('cascade');
-            $table->foreign('fan_id')->references('id')->on('users')->onDelete('cascade');
+            $table->primary(['row_number' , 'seat_number', 'match_id' ]);
+            //$table->foreign('match_id')->references('id')->on('matches')->onDelete('cascade');
+            $table->foreign('fan_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

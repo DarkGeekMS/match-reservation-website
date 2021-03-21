@@ -189,7 +189,7 @@ class EFAManagerController extends Controller
     * }
     */
     /**
-    * view staduim details for each match (vacant/reserved seats).
+    * view staduim details for each match (vacant/reserved seats , reserved matches on it).
     *
     * function description here.
     *
@@ -203,5 +203,80 @@ class EFAManagerController extends Controller
         return;
     }
     
-    
+    /**
+    * getStaduims
+    * shot description 
+    * Success Cases :
+    * 1)
+    * 
+    * Failure Cases:
+    * 1)
+    * 
+    * 
+    * @bodyParam 
+    * @bodyParam 
+    * 
+    * @response 200{
+    * "": ""
+    * }
+    * @response  400{
+    * "error": "error_message"
+    * }
+    * @response  404{
+    * "error": "not_found_error_message"
+    * }
+    */
+    /**
+    * retrieve the available staduims on the website.
+    *
+    * function description here.
+    *
+    * @param Request $request  
+    *
+    * @return json
+    */
+
+    public function getStaduims(Request $request) 
+    {
+        return;
+    } 
+
+    /**
+    * getMatches
+    * shot description 
+    * Success Cases :
+    * 1)
+    * 
+    * Failure Cases:
+    * 1)
+    * 
+    * 
+    * @bodyParam 
+    * @bodyParam 
+    * 
+    * @response 200{
+    * "": ""
+    * }
+    * @response  400{
+    * "error": "error_message"
+    * }
+    * @response  404{
+    * "error": "not_found_error_message"
+    * }
+    */
+    /**
+    * retrieve the available matches on the website.
+    *
+    * function description here.
+    *
+    * @param Request $request  
+    *
+    * @return json
+    */
+
+    public function getMatches(Request $request) 
+    {
+        return;
+    } 
+     
 }

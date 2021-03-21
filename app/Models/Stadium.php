@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stadium extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'id',
+        'rows_number',
+        'seats_number'
+    ];
+    public $incrementing = false;
+    public $timestamps = false;
 }

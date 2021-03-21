@@ -26,13 +26,14 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('/ChangePassword', 'CustomerController@changePassword');
     Route::post('/MakeReservation', 'CustomerController@makeReservation');
     Route::post('/CancelReservation', 'CustomerController@cancelReservation');
-
-
+    Route::get('/GetReservations', 'CustomerController@getReservations');
+    
     // administration
 
     Route::post('/ApproveUser', 'AdminController@approveUser');
     Route::delete('/DeleteUser', 'AdminController@deleteUser');
-
+    Route::get('/GetUsers', 'AdminController@getCurretUsers');
+    Route::get('/GetWaittingUsers', 'AdminController@getBinnedUsers');
 
     // EFA Managers
 
@@ -40,13 +41,13 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::post('/UserData', 'EFAManagerController@userData');
     Route::post('/CreateMatch', 'EFAManagerController@createMatch');
     Route::post('/CreateStadium', 'EFAManagerController@createStadium');
-    Route::post('/ViewMatches', 'EFAManagerController@viewMatch');
-    Route::post('/ViewStadium', 'EFAManagerController@viewStadium');
+    Route::post('/ViewMatchDetails', 'EFAManagerController@viewMatch');
+    Route::post('/ViewMatches', 'EFAManagerController@getMatches');
+    Route::post('/ViewStadiumDetails', 'EFAManagerController@viewStadium');
+    Route::post('/ViewStadiums', 'EFAManagerController@getStaduims');
 
     // General
     Route::post('/SignOut', 'GeneralController@logout');
-
-
 
 });
 

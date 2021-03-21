@@ -71,6 +71,6 @@ class GeneralController extends Controller
      */
 
     public function matchDetails(Request $request) {
-
+        return response()->json(['error' => 'invalid Action'], 200);
     }
 }

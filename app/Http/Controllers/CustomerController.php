@@ -126,6 +126,33 @@ class CustomerController extends Controller
         return;
     }
 
+    /**
+    * getReservations
+    * to get all reservation to any match from specific user.
+    * Success Cases :
+    * 1) .
+    * failure Cases:
+    * 1).
+    * 
+    * @bodyParam 
+    * @bodyParam 
+    * @bodyParam 
+    * 
+    */
+
+    /**
+    *
+    *
+    * Function Description
+    * 
+    * @param Request $request  
+    *
+    * @return Json
+    */
+    public function getReservations(Request $request) 
+    {
+        return;
+    }
 
     /**
     * cancelReservation

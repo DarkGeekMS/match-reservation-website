@@ -20,11 +20,12 @@ class CreateUsers extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
-            $table->boolean('gender');                         # 0 : male , 1 :female
+            $table->set('gender', [0,1]);                         # 0 : male , 1 :female
             $table->string('address')->nullable();
             $table->string('city');
             $table->set('role', [1,2,3])->default(1);
             $table->date('birthdate');
+            $table->boolean('verified')->default(false);
             $table->primary('id');
         });
     }
