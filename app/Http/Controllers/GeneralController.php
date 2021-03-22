@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class GeneralController extends Controller
 {
@@ -71,6 +72,6 @@ class GeneralController extends Controller
      */
 
     public function matchDetails(Request $request) {
-        return response()->json(['error' => 'invalid Action'], 200);
+        
     }
 }
