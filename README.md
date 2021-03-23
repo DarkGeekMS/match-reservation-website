@@ -42,8 +42,9 @@ This a college project utilizing __PHP Laravel__, __MySQL__ and __VueJS__.
 -   Run database migrations :
     ```bash
     php artisan key:generate
-    php artisan migrate
     php artisan jwt:secret
+    php artisan migrate
+    php artisan db:seed
     ```
 
 ## Usage
