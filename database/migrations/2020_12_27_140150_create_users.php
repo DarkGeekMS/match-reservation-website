@@ -27,6 +27,7 @@ class CreateUsers extends Migration
             $table->date('birthdate');
             $table->boolean('verified')->default(false);
             $table->primary('id');
+            $table->SoftDeletes();
         });
     }
 
