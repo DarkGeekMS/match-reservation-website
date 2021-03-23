@@ -13,14 +13,14 @@ class CreateMatches extends Migration
      */
     public function up()
     {
-        Schema::create('match', function (Blueprint $table) {
+        Schema::create('matches', function (Blueprint $table) {
             $table->integer('id')->unsigned()->unique();
             $table->string('home_team');
             $table->string('away_team');
             $table->integer('match_venu')->unsigned();
             $table->string('main_referee');
-            $table->string('first_lineman');
-            $table->string('second_lineman');
+            $table->string('first_linesman');
+            $table->string('second_linesman');
             $table->date('date');
             $table->time('time');
             $table->primary('id');
@@ -35,6 +35,6 @@ class CreateMatches extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('match');
+        Schema::dropIfExists('matches');
     }
 }

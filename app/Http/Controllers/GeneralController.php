@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\User;
-
+use App\Models\Matches;
 
 class GeneralController extends Controller
 {
@@ -62,7 +62,8 @@ class GeneralController extends Controller
      * 1) return details successfully.
      *
      * @response{
-     * "": ""
+     * "match_1": "",
+     * "match_2": "" 
      * }
      */
     /**
@@ -76,6 +77,21 @@ class GeneralController extends Controller
      */
 
     public function matchDetails(Request $request) {
+
+        // first get all matches details
+        $matches = Matches::get();
+        //$matches['reservations'] = $matches->reservations;
+        //check if the request from a logged in user
+        try {
+            $user = new CustomerController;
+            $userID = $user->me($request)->getData()->user->id;
+            return response()->json(['matches' => $matches], 200);
+
+        // if the request from guest user
+        } catch (\Throwable $th) {
+            return response()->json(['matches' => $matches], 200);
+        }
+        
         
     }
 }

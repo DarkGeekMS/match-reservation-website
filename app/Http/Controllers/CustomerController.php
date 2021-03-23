@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use JWTAuth;
+use Tymon\JWTAuth\Http\Parser\Parser;
 
 class CustomerController extends Controller
 {
@@ -182,4 +184,51 @@ class CustomerController extends Controller
     {
         return;
     }
+
+
+        /**
+     * Me
+     * Returns the identity of the user logged in.
+     * Success Cases :
+     * 1) return the user object of the sent token as json.
+     * failure Cases:
+     * 1) NoAccessRight token is not authorized.
+     *
+     * }
+     * @response  404{
+     * "error" : "user_not_found"
+     * }
+     * @response  400{
+     * "token_error":"The token has been blacklisted"
+     * }
+     * @bodyParam token JWT required Used to verify the user.
+     */
+    /**
+     * Returns the user of the sent token.
+     *
+     * The function extracts the token given in the request then it checks if it
+     * corresponds to an existing user then it will return an error if that is
+     * case else it will return the user object of the token.
+     *
+     * @param Request $request  
+     *
+     * @return Json The user's object as json or an error message.
+     */
+    public function me(Request $request)
+    {
+        try {
+            //Parsing the given token, trying to login and getting user data
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                /*Returning error if the token is a valid JWT but the encoded
+                user doesn't exist with 404 status code*/
+                return response()->json(['error' => 'user_not_found'], 404);
+            }
+        } catch (JWTException $e) {
+            //Returning token error with the error message if any error occured
+            return response()->json(['token_error' => $e->getMessage()], 400);
+        }
+        //Returning the data of the user with 200 status code
+        return response()->json(compact('user'));
+    }
+
 }
