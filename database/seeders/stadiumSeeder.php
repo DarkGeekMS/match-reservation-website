@@ -16,31 +16,31 @@ class stadiumSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('stadium')->insert([
+        DB::table('stadiums')->insert([
             'id'           => 1, 
             'rows_number'  => 50,
             'seats_number' => 100
         ]);
 
-        DB::table('stadium')->insert([
+        DB::table('stadiums')->insert([
             'id'           => 2, 
             'rows_number'  => 70,
             'seats_number' => 90
         ]);
 
-        DB::table('stadium')->insert([
+        DB::table('stadiums')->insert([
             'id'           => 3, 
             'rows_number'  => 30,
             'seats_number' => 150
         ]);
 
-        DB::table('stadium')->insert([
+        DB::table('stadiums')->insert([
             'id'           => 4, 
             'rows_number'  => 50,
             'seats_number' => 120
         ]);
 
-        DB::table('stadium')->insert([
+        DB::table('stadiums')->insert([
             'id'           => 5, 
             'rows_number'  => 60,
             'seats_number' => 100

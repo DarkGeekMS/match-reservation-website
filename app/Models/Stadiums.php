@@ -4,20 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Reservation;
 
-class Matches extends Model
+class Stadiums extends Model
 {
     protected $fillable = [
         'id',
-        'home_team',
-        'away_team',
-        'match_venu',
-        'main_referee',
-        'first_lineman',
-        'second_lineman'
+        'rows_number',
+        'seats_number'
     ];
-
     public $incrementing = false;
-
+    public $timestamps = false;
 }

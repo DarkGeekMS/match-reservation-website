@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStadium extends Migration
+class CreateStadiums extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateStadium extends Migration
      */
     public function up()
     {
-        Schema::create('stadium', function (Blueprint $table) {
+        Schema::create('stadiums', function (Blueprint $table) {
             $table->integer('id')->unsigned();
             $table->integer('rows_number');
             $table->integer('seats_number');
@@ -28,6 +28,6 @@ class CreateStadium extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stadium');
+        Schema::dropIfExists('stadiums');
     }
 }

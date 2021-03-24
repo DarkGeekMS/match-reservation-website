@@ -24,7 +24,7 @@ class CreateMatches extends Migration
             $table->date('date');
             $table->time('time');
             $table->primary('id');
-            $table->foreign('match_venu')->references('id')->on('stadium')->onDelete('cascade');
+            $table->foreign('match_venu')->references('id')->on('stadiums')->onDelete('cascade');
         });
     }
 

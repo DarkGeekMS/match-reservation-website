@@ -7,7 +7,8 @@ use Illuminate\Http\Response;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\User;
-use App\Models\Matches;
+use App\Models\Match;
+use App\Models\Stadiums;
 
 class GeneralController extends Controller
 {
@@ -79,8 +80,12 @@ class GeneralController extends Controller
     public function matchDetails(Request $request) {
 
         // first get all matches details
-        $matches = Matches::get();
-        //$matches['reservations'] = $matches->reservations;
+        $matches = Match::get();
+        for ($i=0; $i < sizeof($matches); $i++) { 
+            $matches[$i]['stadium'] = $matches[$i]->stadium;
+            $matches[$i]['reservations'] = $matches[$i]->reservations;
+        }
+
         //check if the request from a logged in user
         try {
             $user = new CustomerController;
@@ -89,7 +94,7 @@ class GeneralController extends Controller
 
         // if the request from guest user
         } catch (\Throwable $th) {
-            return response()->json(['matches' => $matches], 200);
+            return response()->json(['matches' => $matches ], 200);
         }
         
         
