@@ -57,16 +57,71 @@ class GeneralController extends Controller
 
 
     /**
-     * matchDetails
-     * return the matches details for a guest user 
-     * Success Cases :
-     * 1) return details successfully.
-     *
-     * @response{
-     * "match_1": "",
-     * "match_2": "" 
-     * }
-     */
+    * matchDetails
+    * return the matches details for a guest user 
+    * Success Cases :
+    * 1) return details successfully.
+    *
+    * @response{
+    * "matches": [
+    *   {
+    *        "id": 1,
+    *        "home_team": "real madrid",
+    *        "away_team": "barcelona",
+    *        "match_venu": 1,
+    *        "main_referee": "Mike Dean",
+    *        "first_linesman": "Paul Rees",
+    *        "second_linesman": "Paul Evans",
+    *        "date": "2021-06-15",
+    *        "time": "20:00:00",
+    *        "stadium": {
+    *            "id": 1,
+    *            "rows_number": 50,
+    *            "seats_number": 100
+    *        },
+    *        "reservations": [
+    *            {
+    *                "seat_number": 5,
+    *                "row_number": 1
+    *            },
+    *            {
+    *                "seat_number": 1,
+    *                "row_number": 6
+    *            },
+    *            {
+    *                "seat_number": 40,
+    *                "row_number": 2
+    *            }
+    *        ]
+    *    },
+    *    {
+    *        "id": 2,
+    *        "home_team": "bayern",
+    *        "away_team": "barcelona",
+    *        "match_venu": 4,
+    *        "main_referee": "Anthony Taylor",
+    *        "first_linesman": "John Flynn",
+    *        "second_linesman": "Nicholas Cooper",
+    *        "date": "2021-08-21",
+    *        "time": "20:00:00",
+    *        "stadium": {
+    *            "id": 4,
+    *            "rows_number": 50,
+    *            "seats_number": 120
+    *        },
+    *        "reservations": [
+    *            {
+    *                "seat_number": 5,
+    *                "row_number": 2
+    *            },
+    *            {
+    *                "seat_number": 12,
+    *                "row_number": 3
+    *            }
+    *        ]
+    *    }
+    * ]
+    */
     /**
      * view matches details to any user.
      *

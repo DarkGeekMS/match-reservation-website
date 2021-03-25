@@ -127,82 +127,6 @@ class EFAManagerController extends Controller
     {
         return;
     }
-
-    /**
-    * viewMatch
-    * shot description 
-    * Success Cases :
-    * 1)
-    * 
-    * Failure Cases:
-    * 1)
-    * 
-    * 
-    * @bodyParam 
-    * @bodyParam 
-    * 
-    * @response 200{
-    * "": ""
-    * }
-    * @response  400{
-    * "error": "error_message"
-    * }
-    * @response  404{
-    * "error": "not_found_error_message"
-    * }
-    */
-    /**
-    * view match details.
-    *
-    * function description here.
-    *
-    * @param Request $request  
-    *
-    * @return json
-    */
-
-    public function viewMatch(Request $request) 
-    {
-        return;
-    }
-
-    /**
-    * viewStaduim
-    * shot description 
-    * Success Cases :
-    * 1)
-    * 
-    * Failure Cases:
-    * 1)
-    * 
-    * 
-    * @bodyParam 
-    * @bodyParam 
-    * 
-    * @response 200{
-    * "": ""
-    * }
-    * @response  400{
-    * "error": "error_message"
-    * }
-    * @response  404{
-    * "error": "not_found_error_message"
-    * }
-    */
-    /**
-    * view staduim details for each match (vacant/reserved seats , reserved matches on it).
-    *
-    * function description here.
-    *
-    * @param Request $request  
-    *
-    * @return json
-    */
-
-    public function viewStaduim(Request $request) 
-    {
-        return;
-    }
     
     /**
     * getStaduims
@@ -238,44 +162,6 @@ class EFAManagerController extends Controller
     */
 
     public function getStaduims(Request $request) 
-    {
-        return;
-    } 
-
-    /**
-    * getMatches
-    * shot description 
-    * Success Cases :
-    * 1)
-    * 
-    * Failure Cases:
-    * 1)
-    * 
-    * 
-    * @bodyParam 
-    * @bodyParam 
-    * 
-    * @response 200{
-    * "": ""
-    * }
-    * @response  400{
-    * "error": "error_message"
-    * }
-    * @response  404{
-    * "error": "not_found_error_message"
-    * }
-    */
-    /**
-    * retrieve the available matches on the website.
-    *
-    * function description here.
-    *
-    * @param Request $request  
-    *
-    * @return json
-    */
-
-    public function getMatches(Request $request) 
     {
         return;
     } 
