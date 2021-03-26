@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Match;
 use App\Models\Stadiums;
@@ -54,7 +55,57 @@ class GeneralController extends Controller
         return response()->json(['token' => null], 200);
     }
 
+    /**
+    * getReservations
+    * return the stadium seats and the reserved seats for a given match.
+    * Success Cases :
+    * 1) return the reservations and match dimensions.
+    * failure Cases:
+    * 2) match not exists.
+    *
+    *
+    * @response 200{
+    * "reservations":
+    * }
+    * @response  400{
+    * "error":"please insert a match id"
+    * }
+    *
+    *
+    * @bodyParam match_id int required Used to return the data of that match.
+    */
+    /**
+     * @param Request $request  
+     *
+     * @return json the matches details.
+    */
+    public function getReservations(Request $request)
+    {
+        //try to get the match details based on the given id
+        try {
+            // first get all matches details
+            $match = Match::where('id', $request['match_id'])->first();
+            $data['stadium_shape'] = $match->stadium;
+            
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'please insert a match id'], 400);
+        }
 
+        //check if the request from a logged in user
+        try {
+            $user = new CustomerController;
+            $userID = $user->me($request)->getData()->user->id;
+            $data['reservations'] = $match->reservations->where('fan_id' , '<>' , $userID)->makeHidden('fan_id');
+            $data['user_reservations'] = $match->reservations->where('fan_id' , $userID)->makeHidden('fan_id');
+            return response()->json(['reservations' => $data], 200);
+
+        // if the request from guest user
+        } catch (\Throwable $th) {
+            $data['reservations'] = $match->reservations->makeHidden('fan_id');
+            return response()->json(['reservations' => $data ], 200);
+        } 
+        
+    }
 
     /**
     * matchDetails
@@ -73,26 +124,7 @@ class GeneralController extends Controller
     *        "first_linesman": "Paul Rees",
     *        "second_linesman": "Paul Evans",
     *        "date": "2021-06-15",
-    *        "time": "20:00:00",
-    *        "stadium": {
-    *            "id": 1,
-    *            "rows_number": 50,
-    *            "seats_number": 100
-    *        },
-    *        "reservations": [
-    *            {
-    *                "seat_number": 5,
-    *                "row_number": 1
-    *            },
-    *            {
-    *                "seat_number": 1,
-    *                "row_number": 6
-    *            },
-    *            {
-    *                "seat_number": 40,
-    *                "row_number": 2
-    *            }
-    *        ]
+    *        "time": "20:00:00" 
     *    },
     *    {
     *        "id": 2,
@@ -104,28 +136,12 @@ class GeneralController extends Controller
     *        "second_linesman": "Nicholas Cooper",
     *        "date": "2021-08-21",
     *        "time": "20:00:00",
-    *        "stadium": {
-    *            "id": 4,
-    *            "rows_number": 50,
-    *            "seats_number": 120
-    *        },
-    *        "reservations": [
-    *            {
-    *                "seat_number": 5,
-    *                "row_number": 2
-    *            },
-    *            {
-    *                "seat_number": 12,
-    *                "row_number": 3
-    *            }
-    *        ]
     *    }
     * ]
     */
     /**
      * view matches details to any user.
      *
-     * function description here.
      *
      * @param Request $request  
      *
@@ -150,8 +166,7 @@ class GeneralController extends Controller
         // if the request from guest user
         } catch (\Throwable $th) {
             return response()->json(['matches' => $matches ], 200);
-        }
-        
+        } 
         
     }
 }

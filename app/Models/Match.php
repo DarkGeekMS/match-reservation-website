@@ -25,7 +25,7 @@ class Match extends Model
     */
     public function stadium()
     {
-        return $this->hasOne(Stadiums::class, 'id', 'match_venu');
+        return $this->hasOne(Stadiums::class, 'id', 'match_venu')->select(['seats_number', 'rows_number']);
     }
 
     /**
@@ -33,6 +33,6 @@ class Match extends Model
     */
     public function reservations()
     {
-        return $this->hasMany(Reservation::class)->select(['seat_number', 'row_number']);
+        return $this->hasMany(Reservation::class)->select(['seat_number', 'row_number', 'fan_id']);
     }
 }
