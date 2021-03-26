@@ -292,7 +292,31 @@ class CustomerController extends Controller
     */
     public function cancelReservation(Request $request) 
     {
-        return;
+        $customer = new CustomerController;
+        $customer_data = $customer->me($request)->getData()->user;
+        $reservations = Reservation::where("fan_id", $customer_data->id)->get();
+
+        $validator = validator(
+            $request->all(),
+            [
+                "ticket_number" => "required|integer",
+            ]
+        );
+
+        if($validator->fails())
+            return response()->json(["error" => "invalid data format"],400);
+
+        $ticket_number = $request["ticket_number"];
+        $reservation = Reservation::where("ticket_number", $ticket_number)->first();
+        if (!$reservation)
+            return response()->json(["error" => "no such reservation exists"],400);
+
+        if ($reservation->fan_id != $customer_data->id)
+            return response()->json(["error" => "reservation doesn't belong to that user"],400);
+
+        Reservation::where('ticket_number', $ticket_number)->delete();
+
+        return response()->json(["status" => true]);
     }
 
 
