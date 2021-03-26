@@ -261,7 +261,10 @@ class CustomerController extends Controller
     */
     public function getReservations(Request $request) 
     {
-        return;
+        $customer = new CustomerController;
+        $customer_data = $customer->me($request)->getData()->user;
+        $reservations = Reservation::where("fan_id", $customer_data->id)->get();
+        return response()->json($reservations);
     }
 
     /**
