@@ -101,7 +101,11 @@ class CustomerController extends Controller
     */
     public function getPrefs(Request $request)
     {
-        return;
+        $customer = new CustomerController;
+        $customer_data = $customer->me($request)->getData()->user;
+        $user = User::where("id", $customer_data->id)->first();
+        $prefs = $user->only(["first_name", "last_name", "gender", "city", "address"]);
+        return response()->json($prefs);
     }
 
 
