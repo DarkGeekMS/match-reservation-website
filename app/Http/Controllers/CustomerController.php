@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -137,7 +139,21 @@ class CustomerController extends Controller
     */
     public function changePassword(Request $request) 
     {
-        return;
+        $customer = new CustomerController;
+        $customer_data = $customer->me($request)->getData()->user;
+        $user = User::where("id", $customer_data->id)->first();
+        $validator = Validator::make( $request->all(), [ 'new_password' => 'required|string|min:6' ]     );
+
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Invalid password less than 6 chars'], 400);
+        }
+
+        $user->password = Hash::make($request["new_password"]);
+
+        $user->save();
+
+        return response()->json(["status" => true]);
+
     }
 
     /**
