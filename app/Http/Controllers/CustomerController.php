@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JWTAuth;
 use Tymon\JWTAuth\Http\Parser\Parser;
+
 
 class CustomerController extends Controller
 {
@@ -35,7 +38,39 @@ class CustomerController extends Controller
      */
     public function updatePrefs(Request $request)
     {
-        return;
+        $customer = new CustomerController;
+        $customer_data = $customer->me($request)->getData()->user;
+        $user = User::where("id", $customer_data->id)->first();
+        $validator = validator(
+            $request->all(),
+            [
+                "first_name" => "string",
+                "last_name" => "string",
+                "city" => "string",
+                "birthdate" => "date"
+            ]
+        );
+
+        if ($validator->fails())
+            return response()->json(['error' => 'Invalid data format'], 400);
+
+        if ($request->has("first_name"))
+            $user->first_name = $request["first_name"];
+
+        if ($request->has("last_name"))
+            $user->last_name = $request["last_name"];
+
+        if ($request->has("city"))
+            $user->city = $request["city"];
+
+        if ($request->has("birthdate"))
+            $user->birthdate = $request["birthdate"];
+
+        
+        $user->save();
+
+        return response()->json(["status" => true]);
+        
     }
 
     /**
