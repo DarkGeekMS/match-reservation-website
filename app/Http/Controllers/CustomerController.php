@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Reservation;
+use App\Models\Match;
+use App\Models\Stadiums;
+
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -164,9 +169,10 @@ class CustomerController extends Controller
     * failure Cases:
     * 1) match id doesn't exist.
     * 
-    * @bodyParam 
-    * @bodyParam 
-    * @bodyParam 
+    * @bodyParam match_id Integer required id of required match.
+    * @bodyParam seat_number  Integer  required the required seat number.
+    * @bodyParam row_number  Integer  required the required row number.
+    * @bodyParam token JWT required Used to verify the user.
     * 
     */
 
@@ -181,7 +187,53 @@ class CustomerController extends Controller
     */
     public function makeReservation(Request $request) 
     {
-        return;
+        $customer = new CustomerController;
+        $customer_data = $customer->me($request)->getData()->user;
+
+
+        $validator = validator(
+            $request->all(),
+            [
+                "match_id" => "required|integer",
+                "seat_number" => "required|integer",
+                "row_number" => "required|integer"
+            ]
+        );
+
+        if ($validator->fails())
+            return response()->json(["error" => "invalid reservation data"], 400);
+
+        $match_id = $request["match_id"];
+        $seat_number = $request["seat_number"];
+        $row_number = $request["row_number"];        
+        $prevReserv = Reservation::where('match_id', '=', $match_id, 'and')->where('seat_number', '=', $seat_number, 'and')->where('row_number', '=', $row_number)->first();
+
+        if ($prevReserv)
+            return response()->json(["error" => "previous reservation already exists"], 400);
+
+        $match = Match::where("id", $match_id)->first();
+
+        if(!$match)
+            return response()->json(["error" => "no such match exist"], 400);
+
+        $stadium_id = $match->match_venu;
+
+        $stadium = Stadiums::where("id", $stadium_id)->first();
+
+        if (!($seat_number >= 1 && $seat_number <= $stadium->seats_number && $row_number >= 1 && $row_number <= $stadium->rows_number))
+            return response()->json(["error" => "invalid place in the stadium"], 400);
+
+
+        $last_ticket = Reservation::all()->max('ticket_number');
+        $ticket_number = $last_ticket +1;
+
+        $requestData = $request->all();
+        $requestData['ticket_number'] = $ticket_number;
+        $requestData["fan_id"] = $customer_data->id;
+
+        $reservation = new Reservation($requestData);
+        $reservation->save();
+        return response()->json(["status" => true]);
     }
 
     /**
