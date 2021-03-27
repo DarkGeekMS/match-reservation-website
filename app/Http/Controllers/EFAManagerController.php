@@ -10,11 +10,9 @@ use App\Models\Match;
 use App\Models\Stadiums;
 use App\Models\Reservation;
 
-use JWTAuth;
-use Tymon\JWTAuth\Http\Parser\Parser;
-
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
+use Carbon\Carbon;
 
 /**
  * @group EFA manager
@@ -100,6 +98,17 @@ class EFAManagerController extends Controller
 
         if ($rest_validator->fails()) {
             return response()->json(['error' => 'Enter complete and correct match information'], 400);
+        }
+
+        // check whether stadium is occupied
+        $matches = Match::where('match_venu', $request['match_venu'])->get();
+        $match_time = Carbon::createFromFormat('Y-m-d H:i:s', $request['date'].' '.$request['time']);
+        for ($i = 0; $i < sizeof($matches); $i++) {
+            $other_time = Carbon::createFromFormat('Y-m-d H:s:i', $matches[$i]['date'].' '.$matches[$i]['time']);
+            $diff_in_minutes = $match_time->diffInMinutes($other_time);
+            if (abs($diff_in_minutes) < 120) { // 2 hours difference
+                return response()->json(['error' => 'Stadium is occupied at given time'], 400);
+            }
         }
 
         // get next match id
