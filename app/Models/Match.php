@@ -16,7 +16,9 @@ class Match extends Model
         'match_venu',
         'main_referee',
         'first_linesman',
-        'second_linesman'
+        'second_linesman',
+        'date',
+        'time'
     ];
 
     public $incrementing = false;

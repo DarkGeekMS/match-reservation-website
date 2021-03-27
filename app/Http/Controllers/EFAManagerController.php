@@ -107,7 +107,7 @@ class EFAManagerController extends Controller
 
         // create request data and add match id
         $requestData = $request->only(
-            'home_team', 'away_team', 'main_referee', 'first_linesman', 'second_linesman', 'date', 'time'
+            'home_team', 'away_team', 'match_venu', 'main_referee', 'first_linesman', 'second_linesman', 'date', 'time'
         );
         $requestData['id'] = $id;
 
