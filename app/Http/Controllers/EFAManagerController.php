@@ -35,6 +35,7 @@ class EFAManagerController extends Controller
     * 2) Match teams not passed correctly.
     * 3) Match data not passed correctly.
     * 4) Match venue does not exist.
+    * 5) Stadium is occupied at given time.
     * 
     * @bodyParam home_team       string  required The match home team
     * @bodyParam away_team       string  required The match away team
@@ -56,6 +57,9 @@ class EFAManagerController extends Controller
     * "error": "Enter complete and correct match information"
     * }
     * @response  400{
+    * "error": "Stadium is occupied at given time"
+    * }
+    * @response  400{
     * "error": "Error creating match, check match venue"
     * }
     */
@@ -73,7 +77,7 @@ class EFAManagerController extends Controller
         $user = new CustomerController;
         $user_type = $user->me($request)->getData()->user->role;
         if ($user_type != 2) {
-            return response()->json(['error' => "You have to be a manager to create a match event" ], 400);
+            return response()->json(['error' => 'You have to be a manager to create a match event'], 400);
         }
 
         // validate team names
@@ -299,7 +303,7 @@ class EFAManagerController extends Controller
         $user = new CustomerController;
         $user_type = $user->me($request)->getData()->user->role;
         if ($user_type != 2) {
-            return response()->json(['error' => "You have to be a manager to create a stadium" ], 400);
+            return response()->json(['error' => 'You have to be a manager to create a stadium'], 400);
         }
 
         // validate request data
@@ -336,31 +340,31 @@ class EFAManagerController extends Controller
     
     /**
     * getStaduims
-    * shot description 
+    * Retrieves all available stadiums for the given match.
+    *
     * Success Cases :
-    * 1)
+    * 1) All available stadiums are returned.
     * 
     * Failure Cases:
-    * 1)
+    * 1) Match does not exist.
     * 
-    * 
-    * @bodyParam 
-    * @bodyParam 
+    * @bodyParam match_id integer required The match id
+    * @bodyParam token    JWT     required Used to verify the user
     * 
     * @response 200{
-    * "": ""
-    * }
-    * @response  400{
-    * "error": "error_message"
+    * "stadiums": [
+    *   {
+    *       "id"           : 1,
+    *       "rows_number"  : 120,
+    *       "seats_number" : 400
+    *   }]
     * }
     * @response  404{
-    * "error": "not_found_error_message"
+    * "error": "Match does not exist"
     * }
     */
     /**
-    * retrieve the available staduims on the website.
-    *
-    * function description here.
+    * Retrieves all available stadiums for the given match.
     *
     * @param Request $request  
     *
@@ -369,7 +373,35 @@ class EFAManagerController extends Controller
 
     public function getStaduims(Request $request) 
     {
-        return;
+        // check whether match exists
+        $match = Match::where('id', $request['match_id'])->first();
+        if ($match == NULL) {
+            return response()->json(['error' => 'Match does not exist'], 404);
+        }
+
+        // get match date and time
+        $match_time = Carbon::createFromFormat('Y-m-d H:i:s', $match['date'].' '.$match['time']);
+
+        // get all available stadiums at match time
+        $stadiums = Stadiums::get();
+        $available_stadiums = array();
+        for ($i = 0; $i < sizeof($stadiums); $i++) {
+            $matches = Match::where('match_venu', $stadiums[$i]['id'])->get();
+            $to_add = true;
+            for ($j = 0; $j < sizeof($matches); $j++) {
+                $other_time = Carbon::createFromFormat('Y-m-d H:s:i', $matches[$j]['date'].' '.$matches[$j]['time']);
+                $diff_in_minutes = $match_time->diffInMinutes($other_time);
+                if (abs($diff_in_minutes) < 120) { // 2 hours difference
+                    $to_add = false;
+                }
+            }
+            if ($to_add) {
+                array_push($available_stadiums, $stadiums[$i]);
+            }
+        }
+
+        // return all available stadiums
+        return response()->json(['stadiums' => $available_stadiums], 200);
     } 
      
 }
