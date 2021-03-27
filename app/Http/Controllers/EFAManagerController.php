@@ -33,9 +33,10 @@ class EFAManagerController extends Controller
     * 1) Match created successfully and added to database.
     * 
     * Failure Cases:
-    * 1) Match teams not passed correctly.
-    * 2) Match data not passed correctly.
-    * 3) Match venue does not exist.
+    * 1) User is not a manager.
+    * 2) Match teams not passed correctly.
+    * 3) Match data not passed correctly.
+    * 4) Match venue does not exist.
     * 
     * @bodyParam home_team       string  required The match home team
     * @bodyParam away_team       string  required The match away team
@@ -163,31 +164,38 @@ class EFAManagerController extends Controller
 
     /**
     * createStudium
-    * shot description 
+    * Creates a new stadium with given data. 
+    *
     * Success Cases :
-    * 1)
+    * 1) Stadium created successfully and added to database.
     * 
     * Failure Cases:
-    * 1)
+    * 1) User is not a manager.
+    * 2) Invalid dimensions.
+    * 3) Stadium creation error.
     * 
-    * 
-    * @bodyParam 
-    * @bodyParam 
+    * @bodyParam rows_number   integer required number of rows in stadium
+    * @bodyParam seats_number  integer required number of seats per row in stadium
+    * @bodyParam token         JWT     required Used to verify the user
     * 
     * @response 200{
-    * "": ""
+    * "New stadium created successfully"
     * }
+    *
     * @response  400{
-    * "error": "error_message"
+    * "error": "You have to be a manager to create a stadium"
     * }
-    * @response  404{
-    * "error": "not_found_error_message"
+    *
+    * @response  400{
+    * "error": "Enter correct stadium dimensions"
+    * }
+    *
+    * @response  400{
+    * "error": "Error creating stadium"
     * }
     */
     /**
-    * create new stadium.
-    *
-    * function description here.
+    * Creates a new stadium with given data.
     *
     * @param Request $request  
     *
@@ -196,7 +204,43 @@ class EFAManagerController extends Controller
 
     public function createStadium(Request $request)
     {
-        return;
+        // verify logged-in user is manager
+        $user = new CustomerController;
+        $user_type = $user->me($request)->getData()->user->role;
+        if ($user_type != 2) {
+            return response()->json(['error' => "You have to be a manager to create a stadium" ], 400);
+        }
+
+        // validate request data
+        $data_validator = Validator::make(
+            $request->all(), [
+            'rows_number'      => 'required|integer',
+            'seats_number'    => 'required|integer'
+            ]
+        );
+
+        if ($data_validator->fails()) {
+            return response()->json(['error' => 'Enter correct stadium dimensions'], 400);
+        }
+
+        // get next stadium id
+        $last_stadium = Stadiums::get()->max('id');
+        $id = $last_stadium + 1;
+
+        // create request data and add stadium id
+        $requestData = $request->only('rows_number', 'seats_number');
+        $requestData['id'] = $id;
+
+        // try creating stadium
+        try {
+            // sucessful insertion
+            $stadium = new Stadiums($requestData);
+            $stadium->save();
+            return response()->json('New stadium created successfully', 200);
+        } catch (\Throwable $th) {
+            // insertion failure
+            return response()->json(['error' => 'Error creating stadium'], 400);
+        }
     }
     
     /**
