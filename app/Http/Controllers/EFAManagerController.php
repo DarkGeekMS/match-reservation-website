@@ -126,31 +126,46 @@ class EFAManagerController extends Controller
 
     /**
     * editMatch
-    * shot description 
+    * Updates match details.
+    *
     * Success Cases :
-    * 1)
+    * 1) Match updated successfully.
     * 
     * Failure Cases:
-    * 1)
+    * 1) User is not a manager.
+    * 2) Requested match does not exists.
+    * 3) Incorrect match information.
+    * 4) Cannot update stadium of reserved matches. 
     * 
-    * 
-    * @bodyParam 
-    * @bodyParam 
+    * @bodyParam match_id        string  required The match id
+    * @bodyParam home_team       string  optional The match home team
+    * @bodyParam away_team       string  optional The match away team
+    * @bodyParam match_venu      integer optional The match stadium
+    * @bodyParam main_referee    string  optional The match main refree
+    * @bodyParam first_linesman  string  optional The match first linesman
+    * @bodyParam second_linesman string  optional The match second linesman
+    * @bodyParam date            Date    optional The match date
+    * @bodyParam time            Time    optional The match time
+    * @bodyParam token           JWT     required Used to verify the user
     * 
     * @response 200{
-    * "": ""
+    * "Match updated successfully"
     * }
     * @response  400{
-    * "error": "error_message"
+    * "error": "You have to be a manager to create a stadium"
     * }
     * @response  404{
-    * "error": "not_found_error_message"
+    * "error": "Requested match does not exists"
+    * }
+    * @response  400{
+    * "error": "Enter correct match information"
+    * }
+    * @response  400{
+    * "error": "Cannot update stadium of reserved matches"
     * }
     */
     /**
-    * edit match details.
-    *
-    * function description here.
+    * Updates match details.
     *
     * @param Request $request  
     *
@@ -159,7 +174,74 @@ class EFAManagerController extends Controller
 
     public function editMatch(Request $request) 
     {
-        return;
+        // verify logged-in user is manager
+        $user = new CustomerController;
+        $user_type = $user->me($request)->getData()->user->role;
+        if ($user_type != 2) {
+            return response()->json(['error' => 'You have to be a manager to create a stadium' ], 400);
+        }
+
+        // check whether the match exists
+        $match = Match::where('id', $request['match_id'])->first();
+        if ($match == NULL) {
+            return response()->json(['error' => 'Requested match does not exists'], 404);
+        }
+
+        // validate request data
+        $data_validator = Validator::make(
+            $request->all(), [
+            'home_team'       => 'string|max:50',
+            'away_team'       => 'string|max:50',
+            'match_venu'      => 'integer',
+            'main_referee'    => 'string|alpha_dash|max:50',
+            'first_linesman'  => 'string|alpha|max:50',
+            'second_linesman' => 'string|alpha|max:50',
+            'date'            => 'Date',
+            'time'            => 'date_format:H:i:s'
+            ]
+        );
+
+        if ($data_validator->fails()) {
+            return response()->json(['error' => 'Enter correct match information'], 400);
+        }
+
+        // abort if stadium change is requested for reserved match
+        $reservations = $match->reservations;
+        if ($request->has('match_venu')) {
+            if (sizeof($reservations) != 0 && $match->match_venu != $request['match_venu']) {
+                return response()->json(['error' => 'Cannot update stadium of reserved matches'], 400);
+            }
+        }
+
+        // form update data
+        if ($request->has('home_team')) {
+            $match->home_team = $request['home_team'];
+        }
+        if ($request->has('away_team')) {
+            $match->away_team = $request['away_team'];
+        }
+        if ($request->has('match_venu')) {
+            $match->match_venu = $request['match_venu'];
+        }
+        if ($request->has('main_referee')) {
+            $match->main_referee = $request['main_referee'];
+        }
+        if ($request->has('first_linesman')) {
+            $match->first_linesman = $request['first_linesman'];
+        }
+        if ($request->has('second_linesman')) {
+            $match->second_linesman = $request['second_linesman'];
+        }
+        if ($request->has('date')) {
+            $match->date = $request['date'];
+        }
+        if ($request->has('time')) {
+            $match->time = $request['time'];
+        }
+
+        // save changes to database
+        $match->save();
+        return response()->json('Match updated successfully', 200);
     }
 
     /**
