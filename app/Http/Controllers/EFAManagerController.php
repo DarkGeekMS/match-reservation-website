@@ -5,6 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+use App\Models\User;
+use App\Models\Match;
+use App\Models\Stadiums;
+use App\Models\Reservation;
+
+use JWTAuth;
+use Tymon\JWTAuth\Http\Parser\Parser;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 /**
  * @group EFA manager
  *
@@ -34,6 +45,7 @@ class EFAManagerController extends Controller
     * @bodyParam second_linesman string  required The match second linesman
     * @bodyParam date            Date    required The match date
     * @bodyParam time            Time    required The match time
+    * @bodyParam token           JWT     required Used to verify the user
     * 
     * @response 200{
     *   "New match created successfully"
@@ -58,6 +70,13 @@ class EFAManagerController extends Controller
 
     public function createMatch(Request $request) 
     {
+        // verify logged-in user is manager
+        $user = new CustomerController;
+        $user_type = $user->me($request)->getData()->user->role;
+        if ($user_type != 2) {
+            return response()->json(['error' => "You have to be a manager to create a match event" ], 400);
+        }
+
         // validate team names
         $home_team_validator = Validator::make($request->all(), ['home_team' => 'required|string|max:50']);
         $away_team_validator = Validator::make($request->all(), ['away_team' => 'required|string|max:50']);
@@ -74,7 +93,7 @@ class EFAManagerController extends Controller
             'first_linesman'  => 'required|string|alpha|max:50',
             'second_linesman' => 'required|string|alpha|max:50',
             'date'            => 'required|Date',
-            'time'            => 'required|date_format:H:i'
+            'time'            => 'required|date_format:H:i:s'
             ]
         );
 
@@ -83,18 +102,19 @@ class EFAManagerController extends Controller
         }
 
         // get next match id
-        $last_match = Match::withTrashed()->get()->max('id');
-        $id = $last_match +1;
+        $last_match = Match::get()->max('id');
+        $id = $last_match + 1;
 
         // create request data and add match id
-        $requestData = $request->all();
+        $requestData = $request->only(
+            'home_team', 'away_team', 'main_referee', 'first_linesman', 'second_linesman', 'date', 'time'
+        );
         $requestData['id'] = $id;
 
         // try creating match
         try {
             // sucessful insertion
             $match = new Match($requestData);
-            $match->id = $id;
             $match->save();
             return response()->json('New match created successfully', 200);
         } catch (\Throwable $th) {

@@ -20,6 +20,8 @@ class Match extends Model
     ];
 
     public $incrementing = false;
+    public $timestamps = false;
+    
     /**
     * Get the Staduim of the match.
     */
