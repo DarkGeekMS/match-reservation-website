@@ -65,8 +65,25 @@ class GeneralController extends Controller
     *
     *
     * @response 200{
-    * "reservations":
+    *  "reservations": {
+    *    "stadium_shape": {
+    *        "seats_number": 120,
+    *        "rows_number": 50
+    *    },
+    *    "reservations": [
+    *        {
+    *            "seat_number": 5,
+    *            "row_number": 2
+    *        }
+    *    ],
+    *    "user_reservations": [
+    *        {
+    *            "seat_number": 12,
+    *            "row_number": 3
+    *        }
+    *   ]
     * }
+    *
     * @response  400{
     * "error":"please insert a match id"
     * }
