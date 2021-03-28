@@ -6,11 +6,8 @@ use App\Models\User;
 use App\Models\Reservation;
 use App\Models\Match;
 use App\Models\Stadiums;
-
-
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JWTAuth;

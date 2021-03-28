@@ -95,8 +95,8 @@ class GeneralController extends Controller
         try {
             $user = new CustomerController;
             $userID = $user->me($request)->getData()->user->id;
-            $data['reservations'] = $match->reservations->where('fan_id' , '<>' , $userID)->makeHidden('fan_id');
-            $data['user_reservations'] = $match->reservations->where('fan_id' , $userID)->makeHidden('fan_id');
+            $data['reservations'] = $match->reservations->where('fan_id' , '<>' , $userID)->makeHidden('fan_id')->values();
+            $data['user_reservations'] = $match->reservations->where('fan_id' , $userID)->makeHidden('fan_id')->values();
             return response()->json(['reservations' => $data], 200);
 
         // if the request from guest user
