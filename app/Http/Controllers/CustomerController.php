@@ -186,8 +186,7 @@ class CustomerController extends Controller
     {
         $customer = new CustomerController;
         $customer_data = $customer->me($request)->getData()->user;
-
-
+        
         $validator = validator(
             $request->all(),
             [
@@ -210,6 +209,7 @@ class CustomerController extends Controller
 
         $match = Match::where("id", $match_id)->first();
 
+
         if(!$match)
             return response()->json(["error" => "no such match exist"], 400);
 
@@ -230,7 +230,7 @@ class CustomerController extends Controller
 
         $reservation = new Reservation($requestData);
         $reservation->save();
-        return response()->json(["status" => true]);
+        return response()->json(["ticket_number" => $ticket_number]);
     }
 
     /**
@@ -304,12 +304,30 @@ class CustomerController extends Controller
             return response()->json(["error" => "invalid data format"],400);
 
         $ticket_number = $request["ticket_number"];
+
         $reservation = Reservation::where("ticket_number", $ticket_number)->first();
         if (!$reservation)
             return response()->json(["error" => "no such reservation exists"],400);
 
         if ($reservation->fan_id != $customer_data->id)
             return response()->json(["error" => "reservation doesn't belong to that user"],400);
+
+        $match = Match::where("id", $reservation->match_id)->first();
+
+        $today_date = date('Y-m-d H:i:s');
+
+        $today_date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $today_date);
+
+        $match_date = $match->date;
+        $match_time = $match->time;
+
+        $match_date = \Carbon\Carbon::createFromFormat('Y-m-d  H:i:s', $match_date . " " . $match_time);
+
+        $days_diff = $match_date->diffInDays($today_date);
+
+        if($days_diff < 3){
+            return response()->json(["error" => "less than 3 days remaining on the match"], 400);
+        }
 
         Reservation::where('ticket_number', $ticket_number)->delete();
 
