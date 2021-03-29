@@ -20,17 +20,27 @@ class CustomerController extends Controller
      * updatePrefs
      * Updates the preferences of the user.
      * Success Cases :
-     * 1) return true to ensure that the data updated successfully.
+     * 1 - Entering valid data
      * failure Cases:
      * 1) NoAccessRight token is not authorized.
+     * 2) invalid data
      *
      * @bodyParam first_name string  Enable changing the username.
      * @bodyParam last_name  string  Enable changing the fullname.
      * @bodyParam city       string  Enable changing the email.
      * @bodyParam birthdate  Date    Enable changing the profile picture.
      * @bodyParam token JWT required Used to verify the user.
+    * @response 200{
+    *   true
+    * }
+    * @response  400{
+    * "error": "Invalid data format"
+    * }
+    * }
+    * @response 400{
+    * "error" : "Not authorized"
+    * }
      */
-
     /**
      * Changes the preferences of the user.
      *
@@ -73,7 +83,7 @@ class CustomerController extends Controller
         
         $user->save();
 
-        return response()->json(["status" => true]);
+        return response()->json(true);
         
     }
 
@@ -87,10 +97,16 @@ class CustomerController extends Controller
     *
     * @bodyParam token JWT required Used to verify the user.
     * @response 200{
-    *
+    * {
+    *   "first_name": "mohamed",
+    *   "last_name": "3zoz",
+    *   "gender": 1,
+    *   "city": "cairo",
+    *   "address": "4 3zoz street"
+    *}
     * }
     * @response 400{
-    * "error" : "error_message
+    * "error" : "Not authorized"
     * }
     */
     /**
@@ -123,11 +139,15 @@ class CustomerController extends Controller
     *
     * @bodyParam token         JWT   required Used to verify the user.
     * @bodyParam new_password string required Used to update the password of the user.
+
     * @response 200{
-    * "":""
+    * true
     * }
     * @response 400{
-    * "":""
+    *   "error": 'Invalid password less than 6 chars'
+    * }
+    * @response 400{
+    *   "error": 'Not authorized'
     * }
     */
     /**
@@ -154,7 +174,7 @@ class CustomerController extends Controller
 
         $user->save();
 
-        return response()->json(["status" => true]);
+        return response()->json(true);
 
     }
 
@@ -162,15 +182,35 @@ class CustomerController extends Controller
     * makeReservation
     * to make reservation to a match.
     * Success Cases :
-    * 1) return ture to ensure the reservation done successfully.
+    * 1) return ticket id to ensure the reservation done successfully.
     * failure Cases:
     * 1) match id doesn't exist.
+    * 2) place in stadium not valid
+    * 3) reservation already exists
     * 
     * @bodyParam match_id Integer required id of required match.
     * @bodyParam seat_number  Integer  required the required seat number.
     * @bodyParam row_number  Integer  required the required row number.
     * @bodyParam token JWT required Used to verify the user.
     * 
+    * @response 200{
+    *   10
+    * }
+    * @response 400{
+    *   "error": 'Invalid reservation data'
+    * }
+    * @response 400{
+    *   "error": 'previous reservation already exists'
+    * }
+    * @response 400{
+    *   "error": 'no such match exist'
+    * }
+    * @response 400{
+    *   "error": 'invalid place in the stadium'
+    * }
+    * @response 400{
+    *   "error": 'Not authorized'
+    * }
     */
 
     /**
@@ -230,20 +270,39 @@ class CustomerController extends Controller
 
         $reservation = new Reservation($requestData);
         $reservation->save();
-        return response()->json(["ticket_number" => $ticket_number]);
+        return response()->json($ticket_number);
     }
 
     /**
     * getReservations
     * to get all reservation to any match from specific user.
     * Success Cases :
-    * 1) .
+    * 1) Token is valid so reservations are returned
     * failure Cases:
-    * 1).
+    * 1) Token is invalid
     * 
-    * @bodyParam 
-    * @bodyParam 
-    * @bodyParam 
+    * @bodyParam token JWT required Used to verify the user.
+
+    *@response 200{
+    *    {
+    *        "ticket_number": 10,
+    *        "match_id": 2,
+    *        "fan_id": 5,
+    *        "seat_number": 25,
+    *        "row_number": 25
+    *    },
+    *    {
+    *        "ticket_number": 11,
+    *        "match_id": 3,
+    *       "fan_id": 5,
+    *        "seat_number": 25,
+    *        "row_number": 25
+    *    }
+    *}
+
+    * @response 400{
+    *   "error": 'Not authorized'
+    * }
     * 
     */
 
@@ -271,11 +330,33 @@ class CustomerController extends Controller
     * 1) return ture to ensure the reservation cancelled.
     * failure Cases:
     * 1) No reservation exists.
+    * 2) Reservation doesn't belong to user
+    * 3) < 3 days remaining for the match
     * 
-    * @bodyParam 
-    * @bodyParam 
-    * @bodyParam 
+    * @bodyParam ticken_number Integer required number of ticket to be deleted.
+    * @bodyParam token JWT required Used to verify the user.
     * 
+    *@response 200 {
+    *   true
+    *}
+
+    * @response 400{
+    *   "error": 'Invalid data format'
+    * }
+    * @response 400{
+    *   "error": 'no such reservation exists'
+    * }
+    * @response 400{
+    *   "error": 'reservation doesn't belong to that user'
+    * }
+    * @response 400{
+    *   "error": 'less than 3 days remaining on the match'
+    * }
+    * @response 400{
+    *   "error": 'Not authorized'
+    * }
+
+
     */
 
     /**
@@ -331,7 +412,7 @@ class CustomerController extends Controller
 
         Reservation::where('ticket_number', $ticket_number)->delete();
 
-        return response()->json(["status" => true]);
+        return response()->json(true);
     }
 
 
