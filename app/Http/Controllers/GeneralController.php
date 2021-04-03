@@ -96,14 +96,14 @@ class GeneralController extends Controller
      *
      * @return json the matches details.
     */
-    public function getReservations(Request $request)
+    public function getMatchDetails(Request $request)
     {
         //try to get the match details based on the given id
         try {
             // first get all matches details
             $match = Match::where('id', $request['match_id'])->first();
             $data['stadium_shape'] = $match->stadium;
-            
+            $data = $match;
         } catch (\Throwable $th) {
             return response()->json(['error' => 'please insert a match id'], 400);
         }
@@ -114,12 +114,12 @@ class GeneralController extends Controller
             $userID = $user->me($request)->getData()->user->id;
             $data['reservations'] = $match->reservations->where('fan_id' , '<>' , $userID)->makeHidden('fan_id')->values();
             $data['user_reservations'] = $match->reservations->where('fan_id' , $userID)->makeHidden('fan_id')->values();
-            return response()->json(['reservations' => $data], 200);
+            return response()->json([$data], 200);
 
         // if the request from guest user
         } catch (\Throwable $th) {
             $data['reservations'] = $match->reservations->makeHidden('fan_id');
-            return response()->json(['reservations' => $data ], 200);
+            return response()->json([ $data ], 200);
         } 
         
     }
@@ -169,21 +169,6 @@ class GeneralController extends Controller
 
         // first get all matches details
         $matches = Match::get();
-        for ($i=0; $i < sizeof($matches); $i++) { 
-            $matches[$i]['stadium'] = $matches[$i]->stadium;
-            $matches[$i]['reservations'] = $matches[$i]->reservations;
-        }
-
-        //check if the request from a logged in user
-        try {
-            $user = new CustomerController;
-            $userID = $user->me($request)->getData()->user->id;
-            return response()->json(['matches' => $matches], 200);
-
-        // if the request from guest user
-        } catch (\Throwable $th) {
-            return response()->json(['matches' => $matches ], 200);
-        } 
-        
+        return response()->json(['matches' => $matches ], 200);        
     }
 }

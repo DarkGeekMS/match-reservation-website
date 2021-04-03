@@ -53,4 +53,4 @@ Route::post('/SignIn', 'GuestController@login');
 
 // General
 Route::get('/MatchsDetails', 'GeneralController@matchDetails');
-Route::get('/MatchReservationDetails', 'GeneralController@getReservations');
+Route::get('/MatchReservationDetails', 'GeneralController@getMatchDetails');

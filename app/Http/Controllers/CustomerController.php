@@ -61,7 +61,10 @@ class CustomerController extends Controller
                 "first_name" => "string",
                 "last_name" => "string",
                 "city" => "string",
-                "birthdate" => "date"
+                "birthdate" => "date",
+                "address" => "string",
+                "email" => "string|email",
+                "gender" =>  Rule::in([0, 1]),
             ]
         );
 
@@ -80,11 +83,18 @@ class CustomerController extends Controller
         if ($request->has("birthdate"))
             $user->birthdate = $request["birthdate"];
 
-        
+        if ($request->has("address"))
+            $user->address = $request["address"];
+
+        if ($request->has("email"))
+            $user->email = $request["email"];
+
+        if ($request->has("gender"))
+            $user->gender = $request["gender"];
+
         $user->save();
 
         return response()->json(true);
-        
     }
 
     /**
@@ -124,7 +134,10 @@ class CustomerController extends Controller
         $customer = new CustomerController;
         $customer_data = $customer->me($request)->getData()->user;
         $user = User::where("id", $customer_data->id)->first();
-        $prefs = $user->only(["first_name", "last_name", "gender", "city", "address"]);
+        $prefs = $user->only(["first_name", "last_name", "gender", "city", "address", "email", "birthdate"]);
+        if($prefs['address'] == null) {
+            $prefs['address'] = "";
+        }
         return response()->json($prefs);
     }
 
