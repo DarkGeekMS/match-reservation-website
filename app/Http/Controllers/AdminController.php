@@ -152,7 +152,7 @@ class AdminController extends Controller
             return response()->json(['error' => "you have to be admin to view this data" ], 400);
         }
         // return the verified users
-        $users = User::where('verified', true)->select(['username','role', 'id'])->get();
+        $users = User::where('verified', true)->where('role' , '<>', 3)->select(['username','role', 'id'])->get();
         return response()->json(['users' => $users ], 200);
     }
 
