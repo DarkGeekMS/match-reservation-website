@@ -373,6 +373,11 @@ class EFAManagerController extends Controller
 
     public function getStaduims(Request $request) 
     {
+        if ($request->has("match_id") == false){
+            $stadiums = Stadiums::get();
+            return response()->json(['stadiums' => $stadiums], 200);
+        }
+
         // check whether match exists
         $match = Match::where('id', $request['match_id'])->first();
         if ($match == NULL) {
