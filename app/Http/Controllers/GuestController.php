@@ -109,12 +109,15 @@ class GuestController extends Controller
             'last_name'  => 'required|string|alpha_dash|max:50',
             'city'       => 'required|string|alpha|max:50',
             'gender'     => ['required', Rule::in([0, 1]),],
-            'address'    => 'string|max:100',
             'birthdate'  => 'required|Date',
             'role'       => ['required', Rule::in([1, 2]),], ]);
 
         if ($validator4->fails()) {
             return response()->json(['error' => 'complete the required data first'], 400);
+        }
+
+        if ($request->has("address") && $request['address'] == "") {
+            $request["address"] = null;
         }
 
         // get the last user id to  calculate the id of the current user
