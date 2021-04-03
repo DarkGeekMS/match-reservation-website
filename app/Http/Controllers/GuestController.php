@@ -184,6 +184,7 @@ class GuestController extends Controller
         $credentials = $request->only('username', 'password');
 
         $user = User::where('username', $request['username'])->first();
+        $role = $user['role'];
         if ($user == NULL) {
             return response()->json(['error' => 'user not found please make sure you entered a valid username !'], 400);
 
@@ -201,7 +202,7 @@ class GuestController extends Controller
             return response()->json(['error' => 'could_not_create_token'], 400);
         }
         //Returning the token
-        return response()->json(compact('token'));
+        return response()->json(compact('token', 'role'));
     }
 
 
