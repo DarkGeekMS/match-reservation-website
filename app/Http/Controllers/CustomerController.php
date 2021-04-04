@@ -390,16 +390,16 @@ class CustomerController extends Controller
         $validator = validator(
             $request->all(),
             [
-                "ticket_number" => "required|integer",
+                "row_number" => "required|integer",
+                "seat_number" => "required|integer",
+                "match_id"   => "required|integer",
             ]
         );
 
         if($validator->fails())
             return response()->json(["error" => "invalid data format"],400);
 
-        $ticket_number = $request["ticket_number"];
-
-        $reservation = Reservation::where("ticket_number", $ticket_number)->first();
+        $reservation = Reservation::where([ ["row_number", $request['row_number']], ["seat_number" , $request['seat_number']], ["match_id" , $request['match_id']] ])->first();
         if (!$reservation)
             return response()->json(["error" => "no such reservation exists"],400);
 
@@ -423,7 +423,7 @@ class CustomerController extends Controller
             return response()->json(["error" => "less than 3 days remaining on the match"], 400);
         }
 
-        Reservation::where('ticket_number', $ticket_number)->delete();
+        Reservation::where([ ["row_number", $request['row_number']], ["seat_number" , $request['seat_number']], ["match_id" , $request['match_id']] ])->delete();
 
         return response()->json(true);
     }

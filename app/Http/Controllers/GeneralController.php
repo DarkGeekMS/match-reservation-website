@@ -102,8 +102,8 @@ class GeneralController extends Controller
         try {
             // first get all matches details
             $match = Match::where('id', $request['match_id'])->first();
-            $data['stadium_shape'] = $match->stadium;
-            $data = $match;
+            $stadium = $match->stadium;
+            
         } catch (\Throwable $th) {
             return response()->json(['error' => 'please insert a match id'], 400);
         }
@@ -114,11 +114,13 @@ class GeneralController extends Controller
             $userID = $user->me($request)->getData()->user->id;
             $data['reservations'] = $match->reservations->where('fan_id' , '<>' , $userID)->makeHidden('fan_id')->values();
             $data['user_reservations'] = $match->reservations->where('fan_id' , $userID)->makeHidden('fan_id')->values();
+            $data = array_merge($match->toArray() , $data);
             return response()->json([$data], 200);
 
         // if the request from guest user
         } catch (\Throwable $th) {
-            $data['reservations'] = $match->reservations->makeHidden('fan_id');
+            $data['reservations'] = $match->reservations->makeHidden('fan_id')->values();
+            $data = array_merge($match->toArray() , $data);
             return response()->json([ $data ], 200);
         } 
         
