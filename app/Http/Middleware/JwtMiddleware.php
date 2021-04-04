@@ -24,7 +24,7 @@ class JwtMiddleware extends BaseMiddleware
                 return response()->json(['error' => 'user_not_found'], 404);
             }
         } catch (Exception $e) {
-            return response()->json(['error' => 'Not authorized'], 400);
+            return response()->json(['error' => 'Please Login First'], 400);
         }
         return $next($request);
     }
