@@ -28,6 +28,9 @@ class GeneralController extends Controller
     * @response  400{
     * "token_error":"wrong number of segments"
     * }
+    * @response 400{
+    * "error" :  "Please Login First"
+    *}
     * @bodyParam token JWT required Used to verify the user.
     */
     /**
@@ -65,24 +68,30 @@ class GeneralController extends Controller
     *
     *
     * @response 200{
-    *  "reservations": {
-    *    "stadium_shape": {
-    *        "seats_number": 120,
-    *        "rows_number": 50
-    *    },
-    *    "reservations": [
-    *        {
-    *            "seat_number": 5,
+    * [
+    *   {
+    *       "id": 1,
+    *       "home_team": "real madrid",
+    *       "away_team": "barcelona",
+    *       "match_venu": 1,
+    *       "main_referee": "Mike Dean",
+    *       "first_linesman": "Paul Rees",
+    *       "second_linesman": "Paul Evans",
+    *       "date": "2021-06-15",
+    *       "time": "20:00:00",
+    *       "stadium": {
+    *            "seats_number": 100,
+    *            "rows_number": 50
+    *       },
+    *       "reservations": [
+    *       {
+    *            "seat_number": 40,
     *            "row_number": 2
-    *        }
-    *    ],
-    *    "user_reservations": [
-    *        {
-    *            "seat_number": 12,
-    *            "row_number": 3
-    *        }
-    *   ]
-    * }
+    *       }
+    *       ],
+    *       "user_reservations": []
+    *   }
+    * ]
     *
     * @response  400{
     * "error":"please insert a match id"
@@ -90,6 +99,7 @@ class GeneralController extends Controller
     *
     *
     * @bodyParam match_id int required Used to return the data of that match.
+    * @bodyParam  token   JWT optional used to verify the logged in user.
     */
     /**
      * @param Request $request  

@@ -131,7 +131,7 @@ class AdminController extends Controller
     * "error": "you have to be admin to view this data"
     * }
     * @response  400{
-    * "error": "Not authorized"
+    * "error": "Please Login First"
     * }
     */
     /**
@@ -186,7 +186,7 @@ class AdminController extends Controller
     * "error": "you have to be admin to view this data"
     * }
     * @response  400{
-    * "error": "Not authorized"
+    * "error": "Please Login First"
     * }
     */
     /**

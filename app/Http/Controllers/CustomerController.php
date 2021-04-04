@@ -25,11 +25,14 @@ class CustomerController extends Controller
      * 1) NoAccessRight token is not authorized.
      * 2) invalid data
      *
-     * @bodyParam first_name string  Enable changing the username.
-     * @bodyParam last_name  string  Enable changing the fullname.
-     * @bodyParam city       string  Enable changing the email.
-     * @bodyParam birthdate  Date    Enable changing the profile picture.
-     * @bodyParam token JWT required Used to verify the user.
+     * @bodyParam first_name string  Optional Enable changing the user first name.
+     * @bodyParam last_name  string  Optional Enable changing the user last name.
+     * @bodyParam city       string  Optional Enable changing the user city.
+     * @bodyParam birthdate  Date    Optional Enable changing the user birthdate.
+     * @bodyParam address    string  Optional Enable changing the user address.
+     * @bodyParam email      string  Optional Enable changing the user email.
+     * @bodyParam gender     integer Optional Enable changing the user gender.
+     * @bodyParam token      JWT     required Used to verify the user.
     * @response 200{
     *   true
     * }
@@ -38,18 +41,16 @@ class CustomerController extends Controller
     * }
     * }
     * @response 400{
-    * "error" : "Not authorized"
+    * "error" : "Please Login First"
     * }
-     */
+    */
     /**
-     * Changes the preferences of the user.
-     *
-     * Function description
-     *
-     * @param Request $request  
-     *
-     * @return boolean returns true or an error message.
-     */
+    * Changes the preferences of the user.
+    *
+    * @param Request $request  
+    *
+    * @return boolean returns true or an error message.
+    */
     public function updatePrefs(Request $request)
     {
         $customer = new CustomerController;
@@ -112,22 +113,22 @@ class CustomerController extends Controller
     *   "last_name": "3zoz",
     *   "gender": 1,
     *   "city": "cairo",
-    *   "address": "4 3zoz street"
+    *   "address": "4 3zoz street",
+    *   "email": "ramzt1999@gmail.com",
+    *   "birthdate":"1998-06-06" 
     *}
     * }
     * @response 400{
-    * "error" : "Not authorized"
+    * "error" : "Please Login First"
     * }
     */
     /**
     * Gets the preferences of the user.
     *
-    * Function description
-    *
     * @param Request $request  
     *
     * @return Json holds the  user preferences username, email,
-    * first name, last name, gender, city, address.
+    * first name, last name, gender, city, address, email and birthdate.
     */
     public function getPrefs(Request $request)
     {
@@ -160,13 +161,11 @@ class CustomerController extends Controller
     *   "error": 'Invalid password less than 6 chars'
     * }
     * @response 400{
-    *   "error": 'Not authorized'
+    *   "error": 'Please Login First'
     * }
     */
     /**
     * change the user password.
-    *
-    * Function description
     *
     * @param Request $request  
     *
@@ -201,10 +200,10 @@ class CustomerController extends Controller
     * 2) place in stadium not valid
     * 3) reservation already exists
     * 
-    * @bodyParam match_id Integer required id of required match.
+    * @bodyParam  match_id    Integer  required id of required match.
     * @bodyParam seat_number  Integer  required the required seat number.
-    * @bodyParam row_number  Integer  required the required row number.
-    * @bodyParam token JWT required Used to verify the user.
+    * @bodyParam row_number   Integer  required the required row number.
+    * @bodyParam    token       JWT    required Used to verify the user.
     * 
     * @response 200{
     *   10
@@ -222,7 +221,7 @@ class CustomerController extends Controller
     *   "error": 'invalid place in the stadium'
     * }
     * @response 400{
-    *   "error": 'Not authorized'
+    *   "error": 'Please Login First'
     * }
     */
 
@@ -270,7 +269,7 @@ class CustomerController extends Controller
 
         $stadium = Stadiums::where("id", $stadium_id)->first();
 
-        if (!($seat_number > 0 && $seat_number <= $stadium->seats_number && $row_number > 0 && $row_number <= $stadium->rows_number))
+        if (!($seat_number > -1 && $seat_number <= $stadium->seats_number && $row_number > -1 && $row_number <= $stadium->rows_number))
             return response()->json(["error" => "invalid place in the stadium"], 400);
 
 
@@ -316,13 +315,8 @@ class CustomerController extends Controller
     * @response 400{
     *   "error": 'Not authorized'
     * }
-    * 
     */
-
     /**
-    *
-    *
-    * Function Description
     * 
     * @param Request $request  
     *
@@ -346,8 +340,10 @@ class CustomerController extends Controller
     * 2) Reservation doesn't belong to user
     * 3) < 3 days remaining for the match
     * 
-    * @bodyParam ticken_number Integer required number of ticket to be deleted.
-    * @bodyParam token JWT required Used to verify the user.
+    * @bodyParam seat_number Integer required the seat number to be deleted.
+    * @bodyParam row_number  Integer required the row number to be deleted.
+    * @bodyParam match_id    Integer required the match where the user want to cancel the reservation.
+    * @bodyParam  token       JWT    required Used to verify the user.
     * 
     *@response 200 {
     *   true
@@ -366,16 +362,14 @@ class CustomerController extends Controller
     *   "error": 'less than 3 days remaining on the match'
     * }
     * @response 400{
-    *   "error": 'Not authorized'
+    *   "error": 'Please Login First'
     * }
-
-
     */
-
     /**
     * cancel a reservation to a match , note: a user can't cancel a reservation before 3 days or less to the match event.
     *
-    * Function Description
+    * validate the reservation record exists and belongs to that user, check if the match will be held after more than 3 days from the cancelation time
+    * the delete the reservation, else send error message.
     * 
     * @param Request $request  
     *
@@ -429,34 +423,34 @@ class CustomerController extends Controller
     }
 
 
-        /**
-     * Me
-     * Returns the identity of the user logged in.
-     * Success Cases :
-     * 1) return the user object of the sent token as json.
-     * failure Cases:
-     * 1) NoAccessRight token is not authorized.
-     *
-     * }
-     * @response  404{
-     * "error" : "user_not_found"
-     * }
-     * @response  400{
-     * "token_error":"The token has been blacklisted"
-     * }
-     * @bodyParam token JWT required Used to verify the user.
-     */
     /**
-     * Returns the user of the sent token.
-     *
-     * The function extracts the token given in the request then it checks if it
-     * corresponds to an existing user then it will return an error if that is
-     * case else it will return the user object of the token.
-     *
-     * @param Request $request  
-     *
-     * @return Json The user's object as json or an error message.
-     */
+    * Me
+    * Returns the identity of the user logged in.
+    * Success Cases :
+    * 1) return the user object of the sent token as json.
+    * failure Cases:
+    * 1) NoAccessRight token is not authorized.
+    *
+    * }
+    * @response  404{
+    * "error" : "user_not_found"
+    * }
+    * @response  400{
+    * "token_error":"The token has been blacklisted"
+    * }
+    * @bodyParam token JWT required Used to verify the user.
+    */
+    /**
+    * Returns the user of the sent token.
+    *
+    * The function extracts the token given in the request then it checks if it
+    * corresponds to an existing user then it will return an error if that is
+    * case else it will return the user object of the token.
+    *
+    * @param Request $request  
+    *
+    * @return Json The user's object as json or an error message.
+    */
     public function me(Request $request)
     {
         try {

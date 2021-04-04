@@ -154,7 +154,8 @@ class GuestController extends Controller
      * @bodyParam username string required The user's username.
      * @bodyParam password string required The user's password.
      * @response 200{
-     * "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9X2luIiwiaWF0IjoxNTUzMD"
+     * "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9X2luIiwiaWF0IjoxNTUzMD",
+     * "role" : 1
      * }
      * @response  400{
      * "error": "invalid_credentials"

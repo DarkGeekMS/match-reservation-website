@@ -348,7 +348,7 @@ class EFAManagerController extends Controller
     * Failure Cases:
     * 1) Match does not exist.
     * 
-    * @bodyParam match_id integer required The match id
+    * @bodyParam match_id integer Optional The match id
     * @bodyParam token    JWT     required Used to verify the user
     * 
     * @response 200{
@@ -360,7 +360,7 @@ class EFAManagerController extends Controller
     *   }]
     * }
     * @response  404{
-    * "error": "Match does not exist"
+    * "error": "Match_id does not exist"
     * }
     */
     /**
@@ -373,6 +373,7 @@ class EFAManagerController extends Controller
 
     public function getStaduims(Request $request) 
     {
+        // first check if no match id send all stadiums
         if ($request->has("match_id") == false){
             $stadiums = Stadiums::get();
             return response()->json(['stadiums' => $stadiums], 200);
