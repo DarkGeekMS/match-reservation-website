@@ -270,7 +270,7 @@ class CustomerController extends Controller
 
         $stadium = Stadiums::where("id", $stadium_id)->first();
 
-        if (!($seat_number > 0 && $seat_number <= $stadium->seats_number && $row_number > 0 && $row_number <= $stadium->rows_number))
+        if (!($seat_number > -1 && $seat_number <= $stadium->seats_number && $row_number > -1 && $row_number <= $stadium->rows_number))
             return response()->json(["error" => "invalid place in the stadium"], 400);
 
 
