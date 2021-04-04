@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use JWTAuth;
+use Illuminate\Validation\Rule;
 use Tymon\JWTAuth\Http\Parser\Parser;
 
 
