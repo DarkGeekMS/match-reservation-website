@@ -99,7 +99,7 @@ export default {
             var month = this.$refs.month.content.item;
             var year = this.$refs.year.content.item;
             var gender = this.$refs.gender.content.item;
-            var role = this.$refs.role.content;
+            var role = this.$refs.role.content.item;
             var self = this
             console.log(this.$refs.month.content)
             if(
