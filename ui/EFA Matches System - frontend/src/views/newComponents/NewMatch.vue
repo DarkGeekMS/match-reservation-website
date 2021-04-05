@@ -216,6 +216,7 @@ export default {
                     .post('http://127.0.0.1:8000/api/CreateMatch', object)
                     .then(function (response){
                             console.log (response)
+                            alert('match created successfully!')
                         })
                     .catch(function (error) {
                             alert(error.response.data.error);
