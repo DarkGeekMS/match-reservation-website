@@ -1,0 +1,56 @@
+
+  .table-container {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    // padding-left: 10px;
+    // padding-right: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+  }
+ 
+  
+  .responsive-table {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+    
+    .table-row {
+        border-radius: 3px;
+      padding: 10px 30px;
+      display: flex;
+      list-style-type: none;
+      margin-bottom: 15px;
+      background-color: #ffffff;
+      box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.3);
+    }
+    .col-11 {
+      flex-basis: 40%;
+      color: rgb(93, 95, 246);
+      font-size:large;
+      font-family: "Lucida Console", "Courier New", monospace;
+      font-weight: bold;
+    }
+    .col-22 {
+      flex-basis: 50%;
+      font-size:large;
+      font-family: "Lucida Console", "Courier New", monospace;
+    }
+    .col-1-big {
+      flex-basis: 40%;
+      color: rgb(93, 95, 246);
+      font-size:1.5vw;
+      font-family: "Lucida Console", "Courier New", monospace;
+      // font-weight: bold;
+      margin-left: 3%;
+      margin-top: 0.4vw;
+    }
+    // .col-3 {
+    //   flex-basis: 25%;
+    // }
+    // .col-4 {
+    //   flex-basis: 25%;
+    // }
+    
+    
+  }

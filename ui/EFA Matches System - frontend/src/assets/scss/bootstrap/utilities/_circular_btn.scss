@@ -1,0 +1,76 @@
+
+
+.circbtn{
+    display: inline-block;
+    // text-decoration: none;
+    // width: 2em;
+    // height: 2em;
+    // line-height: 2em;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    transition: .3s;
+    // margin: 0.2em;
+    // font-size: 1.6rem;
+  }
+  
+  .circbtn-self-reserved{
+    background: rgb(0, 206, 0);
+    color: #FFF;
+  }
+  
+  .circbtn-self-reserved:hover{
+    color: rgb(0, 206, 0);
+    background: #FFF;
+  }
+  
+  .circbtn-other-reserved{
+    background: rgb(255, 98, 98);
+    color: #FFF;
+  }
+  
+  .circbtn-not-reserved{
+    background: rgb(93, 95, 246);
+    color: #FFF;
+  }
+  
+  .circbtn-not-reserved:hover{
+    color: rgb(93, 95, 246);
+    background: #FFF;
+  }
+  
+  .circbtn-check{
+    background: rgb(0, 206, 0);
+    color: #FFF;
+    width: 3vw ;
+    height: 3vw ; 
+    // margin: 7.5px !important; 
+    margin-right: 3% ;
+    font-size: 2.5vw ; 
+    line-height: 3vw ;
+    // margin-top: auto;
+    align-items: center;
+  }
+  .circbtn-check:hover{
+    color: rgb(0, 206, 0);
+    background: #FFF;
+  }
+
+
+  .circbtn-cross{
+    background: rgb(255, 0, 0);
+    color: #FFF;
+    width: 3vw ;
+    height: 3vw ; 
+    // margin: 7.5px !important; 
+    margin-right: 3% ;
+    font-size: 2.5vw ; 
+    line-height: 3vw ;
+    // margin-top: auto;
+    align-items: center;
+  }
+  .circbtn-cross:hover{
+    color: rgb(255, 0, 0);
+    background: #FFF;
+  }

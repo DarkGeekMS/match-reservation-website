@@ -1,0 +1,97 @@
+
+.container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // height: 100vh;
+  }
+  
+
+
+  .subbtn {
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    color: rgb(93, 95, 246);
+    // text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgb(93, 95, 246);
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }
+
+
+  .subbtn:hover {
+    box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.4);
+  }
+  
+  .subbtn:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(146, 148, 248, 0.4),
+      transparent
+    );
+    transition: all 650ms;
+  }
+  
+  .subbtn:hover:before {
+    left: 100%;
+  }
+  
+
+
+
+
+
+
+  .listbtn {
+    font-size: 1vw;
+    padding: 0.5rem 1.5rem;
+    color: rgb(93, 95, 246);
+    // text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgb(93, 95, 246);
+    position: relative;
+    overflow: hidden;
+    border-radius: 5rem;
+    // margin-bottom: 30px;
+    margin-bottom: 10px;
+    width:100%;
+    text-align: center;
+  }
+
+  .listbtn:hover {
+    box-shadow: 1px 1px 25px 10px rgba(146, 148, 248, 0.4);
+  }
+  
+  .listbtn:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(146, 148, 248, 0.4),
+      transparent
+    );
+    transition: all 650ms;
+  }
+  
+  .listbtn:hover:before {
+    left: 100%;
+  }
+  
+
+  

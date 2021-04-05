@@ -1,0 +1,89 @@
+
+  .match-small-card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .match-small-card {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+    color: rgb(93, 95, 246);
+    // text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgb(93, 95, 246);
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    // margin-bottom: 3vw;
+    margin-top: 3vw;
+    display: flex;
+    align-items: center;
+
+  }
+
+
+
+  /////////////////////////////////////////////////
+
+  @import url('https://fonts.googleapis.com/css?family=Monoton');
+
+$lightColor: rgb(93, 95, 246);
+$darkColor: #2fb5f8;
+$redColor: #ce0000;
+
+.centerhead {
+  font-size: 6vw;
+  text-transform: uppercase;
+  color: $redColor;
+  margin-bottom: 0 !important;
+  text-align: center;
+  width: 100%;
+}
+
+.lefthead {
+    font-size: 2vw;
+    text-transform: uppercase;
+    color: $lightColor;
+    margin-bottom: 0 !important;
+    text-align: left;
+    width: 100%;
+}
+
+.righthead {
+    font-size: 2vw;
+    text-transform: uppercase;
+    color: $darkColor;
+    margin-bottom: 0 !important;
+    text-align: right;
+    width: 100%;
+}
+
+.headfont{
+  font-family: "Monoton", Helvetica, sans-serif;
+  letter-spacing: 0.3vw;
+  word-spacing: 1.2vw;
+
+}
+
+
+.match-small-card:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(146, 148, 248, 0.4),
+      transparent
+    );
+    transition: all 650ms;
+  }
+  
+  .match-small-card:hover:before {
+    left: 100%;
+  }

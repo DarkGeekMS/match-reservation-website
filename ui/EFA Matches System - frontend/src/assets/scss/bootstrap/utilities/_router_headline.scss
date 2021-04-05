@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Monoton');
+
+$lightColor: rgb(93, 95, 246);
+$darkColor: #2fb5f8;
+
+.routerhead {
+  font-size: 3vw;
+  text-transform: uppercase;
+  color: $darkColor;
+  margin: 5vw 0 0 0;
+}
+
+.headfont{
+  font-family: "Monoton", Helvetica, sans-serif;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  letter-spacing: 0.5vw;
+  word-spacing: 1.5vw;
+
+}
+
+@supports (-webkit-background-clip: text) {
+	.routerhead {
+		color: transparent;
+		background: linear-gradient(7deg, $lightColor 50%, $darkColor 0);
+		-webkit-background-clip: text;
+	}
+}
