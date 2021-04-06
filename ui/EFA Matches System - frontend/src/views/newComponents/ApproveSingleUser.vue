@@ -39,11 +39,10 @@ export default {
             axios
             .post('http://127.0.0.1:8000/api/ApproveUser', object)
             .then(function (response){
-                    console.log (response)
                     self.approved = true;
                 })
             .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                 });
         },
     }

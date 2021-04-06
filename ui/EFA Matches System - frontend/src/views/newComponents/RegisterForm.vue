@@ -101,7 +101,6 @@ export default {
             var gender = this.$refs.gender.content.item;
             var role = this.$refs.role.content.item;
             var self = this
-            console.log(this.$refs.month.content)
             if(
                 !(username === '') &&
                 !(password === '') &&
@@ -129,15 +128,14 @@ export default {
                     role: (role === 'Manager') ? 2 : 1,
                     birthdate: this.formatDate(day, month, year),
                 };
-                console.log(object)
                 axios
                 .post('http://127.0.0.1:8000/api/SignUp', object)
                 .then(function (response){
-                    alert(response.data);
+                    self.$swal(response.data);
                     self.$router.push('/')
                     })
                 .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                     });
             }
             else{

@@ -40,10 +40,10 @@ export default {
             )
             {
                 if(!rowsCount.match(/^\d+$/)){
-                    alert('number of rows should be a number');
+                    this.$swal('number of rows should be a number');
                 }
                 else if(!seatCount.match(/^\d+$/)){
-                    alert('number of seats should be a number');
+                    this.$swal('number of seats should be a number');
                 }
                 else{
                     // TODO: send create stadium request
@@ -58,10 +58,10 @@ export default {
                     .then(function (response){
                             self.$refs.rowsCount.content = ''
                             self.$refs.seatCount.content = ''
-                            alert (response.data)
+                            self.$swal(response.data)
                         })
                     .catch(function (error) {
-                            alert(error.response.data.error);
+                            self.$swal(error.response.data.error);
                         });
                 }
             }

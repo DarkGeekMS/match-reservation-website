@@ -38,12 +38,10 @@ export default {
         axios
         .get('http://127.0.0.1:8000/api/MatchsDetails')
         .then(function (response){
-                console.log (response)
                 self.matchesArray = response.data.matches
-                // self.pendingUsers = response.data.users
             })
         .catch(function (error) {
-                alert(error.response.data.error);
+                self.$swal(error.response.data.error);
             });
     },
 };

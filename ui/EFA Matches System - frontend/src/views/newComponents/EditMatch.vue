@@ -110,13 +110,10 @@ export default {
                     }
                     this.stadium_range = stads
                     this.stadiumSelected = this.stadium_range[this.stadium-1]
-                    console.log('aho', this.stadium_range)
-                    console.log(this.stadium)
-                    console.log(this.stadiumSelected)
                     this.$forceUpdate();
                 })
             .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                 });
             
             
@@ -220,7 +217,7 @@ export default {
             {
                 // home and away are not the same
                 if (home === away){
-                    alert('Home and Away Teams cannot be the same!')
+                    self.$swal('Home and Away Teams cannot be the same!')
                 }
                 // TODO: send edit match request and handle error msgs back from it
                 else{
@@ -238,19 +235,15 @@ export default {
                         token: this.token,
 
                     };
-                    console.log(object)
                     var self = this
                     axios
                     .post('http://127.0.0.1:8000/api/UpdateMatch', object)
                     .then(function (response){
-                            console.log (response)
-                            alert ('updated successfully!');
-                            console.log('ahooooooooo')
-                            console.log(home, away) 
+                            self.$swal('updated successfully!');
                             self.$emit('edited', home, away)
                         })
                     .catch(function (error) {
-                            alert(error.response.data.error);
+                            self.$swal(error.response.data.error);
 
                         });
                 }

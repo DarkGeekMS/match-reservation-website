@@ -39,11 +39,10 @@ export default {
             axios
             .delete('http://127.0.0.1:8000/api/DeleteUser', {data: object})
             .then(function (response){
-                    console.log (response)
                     self.removed = true;
                 })
             .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                 });
         },
     }

@@ -8,7 +8,6 @@
                     <!-- <div style="margin-top:400px"> -->
                     
                     <!-- <card shadow class="card-profile mt--300" no-body> -->
-                    
                     <div style="width: 100%; margin-left:1vw; margin-right:1vw; margin-top:5vw; ">
                     <two-col-table :FirstCol="FirstColumn" :SecondCol="SecondColumn"></two-col-table>
                     <img src="./playground.png" class="play-img-center">
@@ -87,12 +86,38 @@ export default {
 
         };
     },
+    watch: { 
+      	otherReservations: function(newVal, oldVal) { // watch it
+          var i; 
+          var j;
+          for (i = 0; i < this.otherReservations.length; i++){
+            for (j = 0; j < this.newReservations.length; j++){
+                // delete from new reserves
+                if ((this.newReservations[j].row_number === this.otherReservations[i].row_number) &&
+                    (this.newReservations[j].seat_number === this.otherReservations[i].seat_number))
+                {
+                    this.newReservations.splice(j, 1);
+                    break
+                }               
+            }
+            for (j = 0; j < this.viewerReservations.length; j++){
+                // delete from new reserves
+                if ((this.viewerReservations[j].row_number === this.otherReservations[i].row_number) &&
+                    (this.viewerReservations[j].seat_number === this.otherReservations[i].seat_number))
+                {
+                    this.viewerReservations.splice(j, 1);
+                    break
+                }               
+            }
+          }
+        }
+      },
+
     created() {
         window.addEventListener("resize", this.myEventHandler); 
         this.isMounted = true;
         this.$nextTick(async function () {
             while(this.seatCount === 0){
-                // setTimeout(() => {  console.log("World!"); }, 2000);
                 await this.sleep(1);
             }
             this.seatWidth = this.$refs.match.clientWidth / this.seatCount;
@@ -119,29 +144,14 @@ export default {
         },
 
         myEventHandler(e) {
-        console.log('width',document.getElementById('match').offsetWidth)
-        console.log('height',document.getElementById('match').offsetHeight)
         this.seatWidth = document.getElementById('match').offsetWidth / this.seatCount;
-        console.log('width: ' + String(this.seatWidth * 0.8) + 'px; margin: ' + String(this.seatWidth * 0.1)+ 'px;');
         this.$forceUpdate();
         },
 
         onClickSubmit() {
+            var self = this
             // TODO: send reserve and undo-reserve requests
-            console.log(this.undoneReservations)
-            console.log(this.newReservations)
-            if(this.isThereReservations()){
-                // TODO: send reserve request
-                var i;
-                for(i = 0; i < this.newReservations.length; i++){
-                    this.reserveRequest(this.newReservations[i].row_number, this.newReservations[i].seat_number)
-                    this.oldReservations.push(this.newReservations[i])
-                    this.newReservations.splice(i, 1);
-                    i--; 
-                }
-                alert('reservations are updated')
-            }
-            else if(this.newReservations.length > this.undoneReservations.length){
+            if(this.newReservations.length > this.undoneReservations.length){
                 var creditnumber = this.$refs.creditnumber.content;
                 var pinnumber = this.$refs.pinnumber.content;
                 if (creditnumber !== '' && pinnumber !== ''){
@@ -149,25 +159,43 @@ export default {
                     var i;
                     for(i = 0; i < this.newReservations.length; i++){
                         this.reserveRequest(this.newReservations[i].row_number, this.newReservations[i].seat_number)
+                        this.oldReservations.push(this.newReservations[i])
                         this.newReservations.splice(i, 1);
                         i--; 
                     }
-                    alert('reservations are updated')
+                    self.$swal('reservations are updated')
                     
                 }
                 else {
                     this.filling_failure_indicator = true;
                 }
             }
+            else if(this.isThereReservations()){
+                // TODO: send reserve request
+                var self = this
+                var i;
+                for(i = 0; i < this.newReservations.length; i++){
+                    this.reserveRequest(this.newReservations[i].row_number, this.newReservations[i].seat_number)
+                    this.oldReservations.push(this.newReservations[i])
+                    this.newReservations.splice(i, 1);
+
+                    i--; 
+                }
+                self.$swal('reservations are updated')
+            }
+
             if(this.isThereUndos()){
                 // TODO: send undo request
+                var self = this
                 var i;
                 for(i = 0; i < this.undoneReservations.length; i++){
                     this.undoReserveRequest(this.undoneReservations[i].row_number, this.undoneReservations[i].seat_number)
+                    this.oldReservations.splice(this.oldReservations.findIndex(x => x.seat_number === this.undoneReservations[i].seat_number && x.row_number === this.undoneReservations[i].row_number), 1);
                     this.undoneReservations.splice(i, 1);
+
                     i--; 
                 }
-                alert('some reservations are undone')
+                self.$swal('some reservations are undone')
             }
 
             
@@ -175,7 +203,7 @@ export default {
         },
 
         reserveRequest: function(row,seat){
-            // console.log(row,seat)
+            var self = this
             const object = {
                 token: this.token,
                 match_id: this.matchID,
@@ -185,14 +213,14 @@ export default {
             axios
             .post('http://127.0.0.1:8000/api/MakeReservation', object)
             .then((response) =>{
-                    console.log(response)                    
                 })
             .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                 });
         },
 
         undoReserveRequest: function(row,seat){
+            var self = this
             const object = {
                 token: this.token,
                 match_id: this.matchID,
@@ -202,10 +230,9 @@ export default {
             axios
             .delete('http://127.0.0.1:8000/api/CancelReservation', {data: object})
             .then((response) =>{
-                    console.log(response)
                 })
             .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                 });
         },
 
@@ -213,9 +240,8 @@ export default {
             /*
             handles clicking on any seat(i, j)
             */
+           var self = this
             if (this.userType !== 'guest'){
-                console.log('ahooo')
-                console.log(this.newReservations, this.undoneReservations)
                 // handle removing a reservation
                 if (this.isSelfReserved(i, j)){
 
@@ -230,7 +256,6 @@ export default {
 
                     // add it to undoneReservations if it was an original one coming from database not a new one
                     var undoneReservationIndex = this.oldReservations.findIndex(x => x.seat_number === i && x.row_number === j);
-                    console.log(undoneReservationIndex, this.oldReservations)
                     if (undoneReservationIndex !== -1){
                         this.undoneReservations.push(this.oldReservations[undoneReservationIndex]);
                     }
@@ -257,7 +282,7 @@ export default {
                 this.$forceUpdate();
             }
             else{
-                alert('login first')
+                self.$swal('login first')
             }
 
         },
@@ -286,6 +311,8 @@ export default {
             return false;
         },
 
+
+
         getState: function(i, j){
             /*
             returns the state of seat(i, j) {free, reserved by viewer(self), reserved but not by the viewer(other)}
@@ -306,27 +333,6 @@ export default {
         },
         isThereUndos: function(){
             return this.undoneReservations.length !== 0;
-        },
-
-        getClass(i, j){
-            
-            // if(this.isSelfReserved(i, j)){
-            //     return 'circbtn-self-reserved'
-            // }
-            // if(this.isOtherReserved(i, j)){
-            //     return 'circbtn-other-reserved'
-            // }
-            // return 'circbtn-not-reserved' 
-            "{ 'red': group.name === 'bar' }"
-            console.log({'circbtn-self-reserved': this.isSelfReserved(i, j),  
-             'circbtn-other-reserved': this.isOtherReserved(i, j),
-             'circbtn-not-reserved': (!this.isOtherReserved(i, j) && !this.isSelfReserved(i, j))})
-            return ({'circbtn-self-reserved': this.isSelfReserved(i, j),  
-             'circbtn-other-reserved': this.isOtherReserved(i, j),
-             'circbtn-not-reserved': (!this.isOtherReserved(i, j) && !this.isSelfReserved(i, j))})
-        // return {
-        //     'fa-checkbox-marked': this.content['cravings'],  
-        //     'fa-checkbox-blank-outline': !this.content['cravings']}
         }
         
     }

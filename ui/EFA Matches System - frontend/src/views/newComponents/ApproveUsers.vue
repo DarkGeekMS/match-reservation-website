@@ -40,12 +40,11 @@ export default {
         axios
         .get('http://127.0.0.1:8000/api/GetWaittingUsers', {params: object})
         .then(function (response){
-                console.log (response)
                 self.pendingUsers = response.data.users
 
             })
         .catch(function (error) {
-                alert(error.response.data.error);
+                self.$swal(error.response.data.error);
             });
     },
     

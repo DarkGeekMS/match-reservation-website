@@ -86,6 +86,7 @@ export default {
             token: this.token,
         };
         var stads = []
+        var self = this
         axios
         .get('http://127.0.0.1:8000/api/ViewStadiums', {params: object})
         .then((response) =>{
@@ -99,7 +100,7 @@ export default {
                 this.$forceUpdate();
             })
         .catch(function (error) {
-                alert(error.response.data.error);
+                self.$swal(error.response.data.error);
             });
     },
     data() {
@@ -193,7 +194,7 @@ export default {
             {
                 // home and away are not the same
                 if (home === away){
-                    alert('Home and Away Teams cannot be the same!')
+                    this.$swal('Home and Away Teams cannot be the same!')
                 }
                 // TODO: send create match request and handle error msgs back from it
                 else{
@@ -210,16 +211,14 @@ export default {
                         token: this.token,
 
                     };
-                    console.log(object)
                     var self = this
                     axios
                     .post('http://127.0.0.1:8000/api/CreateMatch', object)
                     .then(function (response){
-                            console.log (response)
-                            alert('match created successfully!')
+                            self.$swal('match created successfully!')
                         })
                     .catch(function (error) {
-                            alert(error.response.data.error);
+                            self.$swal(error.response.data.error);
                         });
                 }
             }

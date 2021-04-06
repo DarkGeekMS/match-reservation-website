@@ -40,33 +40,11 @@ export default {
         axios
         .get('http://127.0.0.1:8000/api/GetUsers', {params: object})
         .then(function (response){
-                console.log (response);
                 self.currentUsers = response.data.users
             })
         .catch(function (error) {
-                alert(error.response.data.error);
+                self.$swal(error.response.data.error);
             });
-
-
-        // this is dummy to be removed
-        // this.currentUsers = [
-        //     {
-        //         userid: '1',
-        //         username: 'Mohamed Ahmed'
-        //     },
-        //     {
-        //         userid: '2',
-        //         username: 'Mohamed Shawky'
-        //     },
-        //     {
-        //         userid: '3',
-        //         username: 'Monda Talaat'
-        //     },
-        //     {
-        //         userid: '4',
-        //         username: 'Mohamed Ramzy'
-        //     }
-        // ]
     },
     
 };

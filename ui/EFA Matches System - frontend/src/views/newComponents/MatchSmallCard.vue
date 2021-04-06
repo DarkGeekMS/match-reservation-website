@@ -17,6 +17,7 @@
                         :matchID="matchID"
                         :token="token"
                         :userType="userType"
+                        :matchOpened="openDetails"
                         @edited="matchEdited"
                     ></match-card>
                 </div>

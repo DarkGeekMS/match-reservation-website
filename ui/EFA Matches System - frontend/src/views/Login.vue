@@ -39,7 +39,6 @@ export default {
   methods: {
     onClickGenerate (generateClicked) {
       this.generateClicked = generateClicked
-      console.log(this.generateClicked)
       
     }
   }

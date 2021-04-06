@@ -69,11 +69,10 @@ export default {
                         type = 'fan'
                     }
                     
-                    console.log(response.data)
                     self.$router.push({name:'components', params: { userType: type , token: response.data.token}})
                     })
                 .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                     });
             }
             else{

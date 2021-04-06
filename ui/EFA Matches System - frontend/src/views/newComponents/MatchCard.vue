@@ -62,8 +62,17 @@ export default {
     props: {
       matchID: Number,
       token: String,
-      userType: String
+      userType: String,
+      matchOpened: Boolean
     },
+  
+  // watch: { 
+  //   matchOpened: function(newVal, oldVal) { // watch it
+  //     if (!this.matchOpened){
+  //       this.$destroy();
+  //     }
+  //   }
+  // },
   data: function() {
     return{
         generateClicked: 0,
@@ -83,20 +92,21 @@ export default {
       }
     },
   mounted() {
-        console.log('yady el moseba')
         this.getMatchDetails()
+        this.t = setInterval(() => this.pollMatchDetails(), 1000);
         // this.pollReservations()
       
+    },
+  destroyed() {
+    clearInterval(this.t)
     },
 
   methods: {
     clicked (generateClicked) {
       this.generateClicked = generateClicked
-      console.log(this.generateClicked)
       
     },
     matchEdited (home, away){
-      console.log(home, away) 
       this.getMatchDetails()      
       this.$emit('edited', home , away)
     },
@@ -130,36 +140,45 @@ export default {
               this.time = response.data[0].time
 
               this.otherReservations = response.data[0].reservations
-              console.log(this.otherReservations)
-
-              console.log('gggggggg')
-              console.log(this.homeTeam, this.awayTeam)
-
               if (this.userType !== 'guest'){
                 this.viewerReservations = response.data[0].user_reservations
-                console.log(this.viewerReservations)
               }
               
-              
-              console.log('response')
-              console.log(response)
               this.matchView = true
               this.$forceUpdate();
           })
       .catch(function (error) {
-              alert(error.response.data.error);
+              self.$swal(error.response.data.error);
           });
     },
 
-    async pollReservations(){
-      while(true){
-        this.getMatchDetails();
-        await this.sleep(500);
+    pollMatchDetails(){
+      var object;
+      if (this.userType === 'guest'){
+        object = {
+          match_id: this.matchID
+        };
       }
-    },
-
-    sleep: function(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+      else{
+        object = {
+          token: this.token,
+          match_id: this.matchID
+        };
+      }
+      var self = this
+      axios
+      .get('http://127.0.0.1:8000/api/MatchReservationDetails', {params: object})
+      .then((response) =>{
+              this.otherReservations = response.data[0].reservations
+              // this.viewerReservations = response.data[0].user_reservations
+              this.$forceUpdate();
+          })
+      .catch(function (error) {
+              if(!(error.response.status === 429)){
+                self.$swal(error.response.data.error);
+              }
+              
+          });
     },
   }
   };

@@ -27,12 +27,7 @@ export default {
     watch: { 
         selectedItem: {
             handler(n, o) {
-                // console.log(n)
-                // console.log('Prop changed: ', newVal, ' | was: ', oldVal)
-                // console.log(this.content)
-                // console.log(this.items)
                 this.content = {item: (this.items[0].constructor)(n), index: this.items.indexOf( (this.items[0].constructor)(n))}
-                // console.log(this.content)
             },
             deep: true
         }

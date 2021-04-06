@@ -92,7 +92,6 @@ export default {
             const object = {
                 token: this.token,
             };
-            console.log(object)
             var self = this
             axios
             .get('http://127.0.0.1:8000/api/GetPreferences', {params: object})
@@ -109,7 +108,7 @@ export default {
                     this.$forceUpdate();
                 })
             .catch(function (error) {
-                    alert(error.response.data.error);
+                    self.$swal(error.response.data.error);
                 })
                 ;
         })
@@ -163,16 +162,14 @@ export default {
                     email: email,
                     gender: (gender === 'Male') ? 0 : 1,
                 };
-                console.log(object)
                 var self = this
                 axios
                 .post('http://127.0.0.1:8000/api/UpdatePreferences', object)
                 .then((response) =>{
-                        console.log(response)
-                        alert('edited successfully!')
+                        self.$swal('edited successfully!')
                     })
                 .catch(function (error) {
-                        alert(error.response.data.error);
+                        self.$swal(error.response.data.error);
                     })
                     ;
             }
